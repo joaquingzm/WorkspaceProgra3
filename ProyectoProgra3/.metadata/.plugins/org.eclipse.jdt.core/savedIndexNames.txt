@@ -1,0 +1,1 @@
+INDEX VERSION 1.134+C:\Users\anali\Joaco\Universidad\Progra 3\ProyectoProgra3\.metadata\.plugins\org.eclipse.jdt.core
