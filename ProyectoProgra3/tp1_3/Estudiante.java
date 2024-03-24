@@ -8,6 +8,15 @@ public class Estudiante {
 	private String email;
 	private String direccion;
 	
+	public Estudiante() {}
+	public Estudiante(String nombre,String apellido,String comision,String email,String direccion) {
+		this.setNombre(nombre);
+		this.setApellido(apellido);
+		this.setComision(comision);
+		this.setEmail(email);
+		this.setDireccion(direccion);
+	}
+	
 	public String tusDatos() {
 		return ("nombre: "+getNombre()+
 				" apellido: "+getApellido()+
