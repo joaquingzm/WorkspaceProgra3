@@ -1,2 +1,2 @@
-*.metadata/
-.plugins
+.metadata/
+.metadata/plugins/org.eclipse
