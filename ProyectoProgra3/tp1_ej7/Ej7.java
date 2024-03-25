@@ -155,6 +155,7 @@ public class Ej7 {
 			else {
 				listar.add(lista2.get(i).intValue());
 			}
+			i++;
 		}
 		return listar;
 	}
