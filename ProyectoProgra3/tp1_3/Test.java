@@ -35,6 +35,8 @@ public class Test {
 			System.out.print(arregloProf[i].tusDatos());
 			System.out.print("\n");
 		}
+		
+		System.out.println("hola");
 	
 	}
 
