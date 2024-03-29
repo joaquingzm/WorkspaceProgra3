@@ -2,19 +2,11 @@ package tp1_ej8;
 import java.util.*;
 public class Queue_implementacion<T> extends Sequence {
 	
-	private List<T> data;
+	protected ArrayList<T> data = new ArrayList<T>();
 
 	
-	public Queue_implementacion() {}
 	
-	@Override
-	public int size() {
-		return data.size() ;
-	}
-	@Override
-	public boolean is_empty() {
-		return (data.size()>0);
-	}
+	public Queue_implementacion() {}
 	
 	public void enqueue(T t) {
 		if(this.is_empty()) {
@@ -22,12 +14,25 @@ public class Queue_implementacion<T> extends Sequence {
 		}
 		data.add(t);
 	}
-	public T dequeue(T t) {
+	
+	public T dequeue() {
 		return data.remove(0);
 	}
-	public T head(T t) {
+	
+	public T head() {
 		return data.get(0);
 	}
+	
+	@Override
+	public int size() {
+		return data.size() ;
+	}
+	
+	@Override
+	public boolean is_empty() {
+		return (data.size()==0);
+	}
+	
 	@Override
 	public String toString() {
 		String aux="";
@@ -36,6 +41,5 @@ public class Queue_implementacion<T> extends Sequence {
 		}
 		return aux;
 	}
-	
-
+		
 }

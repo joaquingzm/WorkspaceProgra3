@@ -135,25 +135,29 @@ public class Ej7 {
 		int dim1 = 5,dim2 = 6;
 		System.out.println("    -Lista1-");
 		for(int i=0;i<dim1;i++) {
-			System.out.print((i+1)+" - ");
-			lista1.add(in.nextInt());
+			lista1.add(i*2);
+			System.out.print((i+1)+" - "+lista1.get(i)+"\n");
 		}
 		System.out.println("    -Lista2-");
 		for(int i=0;i<dim2;i++) {
-			System.out.print((i+1)+" - ");
-			lista2.add(in.nextInt());
+			lista2.add(i*2+1);
+			System.out.print((i+1)+" - "+lista2.get(i)+"\n");
 		}
 		
 	}
 	public static ArrayList<Integer> combinar_ordenado(ArrayList<Integer> lista1,ArrayList<Integer> lista2) {
 		int  i=0,dim=(lista1.size()+lista2.size());
+		int j=0,dimj=lista1.size();
+		int k=0,dimk=(lista2.size());
 		ArrayList<Integer> listar= new ArrayList<Integer>();
-		while(i<=dim){
-			if(lista1.get(i).intValue()>lista2.get(i).intValue()) {
-				listar.add(lista1.get(i).intValue());
+		while(i<dim){
+			if(j<dimj&&lista1.get(j).intValue()<lista2.get(k).intValue()) {
+				listar.add(lista1.get(j).intValue());
+				j++;
 			}
-			else {
-				listar.add(lista2.get(i).intValue());
+			else if(k<dimk) {
+				listar.add(lista2.get(k).intValue());
+				k++;
 			}
 			i++;
 		}
