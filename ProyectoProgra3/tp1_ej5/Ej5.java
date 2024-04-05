@@ -3,7 +3,6 @@ package tp1_ej5;
 public class Ej5 {
 
 	public static void main(String[] args) {
-		
 		int[] arregloInt = {1,2,3,4,5,};		
 		int[] result;
 		result=a(arregloInt);
@@ -16,9 +15,7 @@ public class Ej5 {
 		System.out.println(mmp.getMax());
 		System.out.println(mmp.getMin());
 		System.out.println(mmp.getProm());
-		System.out.println();
-		
-		
+		System.out.println();	
 	}
 
 	public static int[] a(int arr[]) {

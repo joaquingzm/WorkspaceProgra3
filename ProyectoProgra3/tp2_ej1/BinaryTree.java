@@ -121,7 +121,7 @@ public class BinaryTree<T> {
 			}
 		}
 	}
-	public void entreNiveles(int min,int max) {
+	public void entreAlturas(int min,int max) {
 		BinaryTree<T> b = null;
 		Queue<BinaryTree<T>> q = new Queue<BinaryTree<T>>();
 		Queue<BinaryTree<T>> aux = new Queue<BinaryTree<T>>();
