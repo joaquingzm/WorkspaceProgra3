@@ -9,7 +9,7 @@ public class Ej1 {
 		System.out.println();
 		b.entreProfundidades(1,2);
 		System.out.println();
-		b.entreNiveles(0,1);
+		b.entreAlturas(0,1);
 	}
 	
 	public static void cargarArbol(BinaryTree<Integer> b,int i) {

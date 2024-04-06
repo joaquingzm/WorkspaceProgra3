@@ -1,138 +1,316 @@
 package paquete_funciones_arbol;
-import tp2_ej1.BinaryTree;
-/* Cosas a tener en cuenta:
- * - Probar enfoque recursivo para crear el String para imprimir el arbol o directamente
- ir imprimendo el arbol, creo que deberia ser post orden asi conozco la cantidad de niveles
- y por lo tanto la cantidad de blancos que tengo que agregar para que la impresión sea simétrica
- * - Las operaciones deberían poder ser en mayusuculas o mminisculas gracias al toLowerCase()
- * - Hacer módulo que imprima el arbol
- * - Cambiar color del nodo para saber donde estoy
-
- * Reglas:
- * - salir = deja el arbol así como está, si no se cargó nada queda en null
+/*
+ * Operaciones:
  * - cargar = se elige el nodo actual para cargar datos
+ * - salir = deja el arbol así como está, si no se cargó nada queda en null
+ * - volver = vuelve al estado anterior borrando hijos si se fueron hechos (hace tope con la raiz, si se quiere poner el estado
+ anterior hay que volver a cargar)
+ * - imprimir = imprime estado del arból y marca el nodo con '-'
  * - hd/hi = se mueve al hijo derecho/hijo izquierdo del nodo (si no existe pregunta si se
  quiere crear un nodo para cargar)
  * - p = vuelve al padre
- * - cancelar = idealmente volvería al estado anterior(sólo guarda el estado inmediato anterior)
- * - 
  */
+import tp1_ej8.DoubleEndedQueue;
 import java.util.Scanner;
-import tp1_ej8.Queue;
+import tp2_ej1.BinaryTree;
 public class FuncionesArbol{
-	Scanner in = new Scanner(System.in);
-	public BinaryTree<String> cargarArbol() {
-		BinaryTree<String> ab=null;
-		boolean b = false;
-		while (b==false){
-			System.out.print("Ingrese tipo de dato de los nodos: ");
-			String tipo = in.next();
-			switch(tipo) {
-			case "String": ab = null;b=true;
-			case "Integer": ab = null;b=true;
-			case "Character": ab = null;b=true;
-			default: System.out.println("Porfavor ingresar un tipo válido.");
-			}
-		}
-		cargarArbolP(ab);
-		in.close();
-		return ab;
-	}
-	private void cargarArbolP(BinaryTree<String> nodo_act) {
-		String aux_op="";
-		String aux_op_ant="";
-		String aux_data="";
-		BinaryTree<String> aux_ab = null;
-		BinaryTree<String> nodo_ant=null;
-		if(aux_data=="cargar") {
-			aux_data = in.next();
-			nodo_act = new BinaryTree<String>(aux_data);
-		}
-		while(aux_op!="salir") {
-			System.out.println("Operaciones: Cargar, Salir, Hd, Hi, Cancelar\n- ");
-			aux_op_ant=aux_op;
+	
+	
+	public void cargarArbolString(BinaryTree<String> ab,Scanner in) {
+		if(ab!=null) {
+			DoubleEndedQueue<BinaryTree<String>> nodos_ant = new DoubleEndedQueue<BinaryTree<String>>();
+			DoubleEndedQueue<BinaryTree<String>> nodos_padre = new DoubleEndedQueue<BinaryTree<String>>();
+			DoubleEndedQueue<String> ops_ant = new DoubleEndedQueue<String>();
+			String aux_op="";
+			BinaryTree<String> aux_ab = null;
+			BinaryTree<String> nodo_act=ab;
+			System.out.print("Operaciones: Cargar, Salir: ");
 			aux_op = in.next();
-			aux_op.toLowerCase();
-			switch (aux_op){
-			
-			case "cargar":
-				System.out.println("Cargar Dato:\n- ");
-				aux_data = in.next();
-				nodo_act.setData(aux_data);
+			aux_op= aux_op.toLowerCase();
+			if(aux_op.equals("cargar")) {
+				cargarS(nodo_act,in);
+			}
+			while(!aux_op.equals("salir")) {
+				System.out.print("Operaciones: Cargar, Salir, Volver, Imprimir, Hd, Hi, P: ");
+				aux_op = in.next();
+				aux_op=aux_op.toLowerCase();
+				switch (aux_op){
 				
-			case "hd":
-				if(!nodo_act.hasRightChild()) {
-					System.out.println("Hijo derecho no existe, queres crear uno y cargarlo?(Si, No)\n- ");
-					aux_op = in.next();
-					aux_op.toLowerCase();
-					if(aux_op=="si") {
-						aux_ab = new BinaryTree<String>();
-						nodo_act.addRightChild(aux_ab);
-						nodo_ant = nodo_act;
-						nodo_act = nodo_act.getRightChild();
-					}
-				}
-				
-			case "hi":
-				if(!nodo_act.hasLeftChild()) {
-					System.out.println("Hijo izquierdo no existe, queres crear uno y cargarlo?(Si o No)\n- ");
-					aux_op = in.next();
-					aux_op.toLowerCase();
-					if(aux_op=="si") {
-						aux_ab = new BinaryTree<String>();
-						nodo_act.addLeftChild(aux_ab);
-						nodo_ant = nodo_act;
+				case "cargar":
+					cargarS(nodo_act,in);
+					ops_ant.enqueueFirst(aux_op);
+					break;
+					
+				case "hi":	
+				case "hd":					
+					nodos_padre.enqueueFirst(nodo_act);
+					nodos_ant.enqueueFirst(nodo_act);
+					if(aux_op.equals("hi")) {
+						if(!nodo_act.hasLeftChild()) {
+							cargarSH(nodo_act,in,true);
+							ops_ant.enqueueFirst("hi_cargar");
+						}
+						else ops_ant.enqueueFirst("hi_mover");
 						nodo_act = nodo_act.getLeftChild();
 					}
+					else {
+						if(!nodo_act.hasRightChild()) {
+							cargarSH(nodo_act,in,false);
+							ops_ant.enqueueFirst("hd_cargar");
+						}
+						else ops_ant.enqueueFirst("hd_mover");
+						nodo_act = nodo_act.getRightChild();
+					}
+					break;
+					
+				case "p":
+					if(!nodos_padre.is_empty()) {
+						aux_ab=nodo_act;
+						nodo_act=nodos_padre.dequeue();
+						ops_ant.enqueueFirst("p_mover");
+						nodos_ant.enqueueFirst(aux_ab);
+					}
+					break;
+					
+				case "volver":
+					if(!nodos_ant.is_empty()) {
+						if(nodos_ant.head()==nodo_act.getLeftChild()||nodos_ant.head()==nodo_act.getRightChild())nodos_padre.enqueue(nodo_act);
+						nodo_act=nodos_ant.dequeue();
+						switch(ops_ant.dequeue()) {
+						case "hi_cargar":nodo_act.removeLeftChild();break;
+						case "hd_cargar":nodo_act.removeRightChild();break;
+						}
+					}
+				case "salir":
+					break;
+				case "imprimir":
+					imprimirArbolP(ab,0,nodo_act);
+					break;
+				default:
+					System.out.print("Operación no válida");
 				}
 			
-			case "p":
-				nodo_act=nodo_ant;
+			}
+		}
+	}
+	private void cargarS(BinaryTree<String> nodo_act,Scanner in) {
+		System.out.print("Cargar Dato: ");
+		String aux_data = in.next();
+		nodo_act.setData(aux_data);
+	}
+	private void cargarSH(BinaryTree<String> nodo_act,Scanner in,boolean hi) {
+		BinaryTree<String> aux_ab = new BinaryTree<String>();
+		cargarS(aux_ab,in);
+		if(hi)nodo_act.addLeftChild(aux_ab);
+		else nodo_act.addRightChild(aux_ab);
+	}
+	
+	public void cargarArbolInteger(BinaryTree<Integer> ab,Scanner in) {
+		if(ab!=null) {
+			DoubleEndedQueue<BinaryTree<Integer>> nodos_ant = new DoubleEndedQueue<BinaryTree<Integer>>();
+			DoubleEndedQueue<BinaryTree<Integer>> nodos_padre = new DoubleEndedQueue<BinaryTree<Integer>>();
+			DoubleEndedQueue<String> ops_ant = new DoubleEndedQueue<String>();
+			String aux_op="";
+			BinaryTree<Integer> aux_ab = null;
+			BinaryTree<Integer> nodo_act=ab;
+			System.out.print("Operaciones: Cargar, Salir: ");
+			aux_op = in.next();
+			aux_op= aux_op.toLowerCase();
+			if(aux_op.equals("cargar")) {
+				cargarI(nodo_act,in);
+			}
+			while(!aux_op.equals("salir")) {
+				System.out.print("Operaciones: Cargar, Salir, Volver, Imprimir, Hd, Hi, P: ");
+				aux_op = in.next();
+				aux_op=aux_op.toLowerCase();
+				switch (aux_op){
 				
-			case "cancelar":
-				nodo_act=nodo_ant;
-				switch(aux_op_ant) {
-				case "hi":nodo_act.removeLeftChild();
-				case "hd":nodo_act.removeRightChild();
+				case "cargar":
+					cargarI(nodo_act,in);
+					ops_ant.enqueueFirst(aux_op);
+					break;
+					
+				case "hi":	
+				case "hd":					
+					nodos_padre.enqueueFirst(nodo_act);
+					nodos_ant.enqueueFirst(nodo_act);
+					if(aux_op.equals("hi")) {
+						if(!nodo_act.hasLeftChild()) {
+							cargarIH(nodo_act,in,true);
+							ops_ant.enqueueFirst("hi_cargar");
+						}
+						else ops_ant.enqueueFirst("hi_mover");
+						nodo_act = nodo_act.getLeftChild();
+					}
+					else {
+						if(!nodo_act.hasRightChild()) {
+							cargarIH(nodo_act,in,false);
+							ops_ant.enqueueFirst("hd_cargar");
+						}
+						else ops_ant.enqueueFirst("hd_mover");
+						nodo_act = nodo_act.getRightChild();
+					}
+					break;
+					
+				case "p":
+					if(!nodos_padre.is_empty()) {
+						aux_ab=nodo_act;
+						nodo_act=nodos_padre.dequeue();
+						ops_ant.enqueueFirst("p_mover");
+						nodos_ant.enqueueFirst(aux_ab);
+					}
+					break;
+					
+				case "volver":
+					if(!nodos_ant.is_empty()) {
+						if(nodos_ant.head()==nodo_act.getLeftChild()||nodos_ant.head()==nodo_act.getRightChild())nodos_padre.enqueue(nodo_act);
+						nodo_act=nodos_ant.dequeue();
+						switch(ops_ant.dequeue()) {
+						case "hi_cargar":nodo_act.removeLeftChild();break;
+						case "hd_cargar":nodo_act.removeRightChild();break;
+						}
+					}
+				case "salir":
+					break;
+				case "imprimir":
+					imprimirArbolP(ab,0,nodo_act);
+					break;
+				default:
+					System.out.print("Operación no válida");
 				}
-			case "salir":
-				break;
-			default:
-				System.out.println("Operación no válida\n");
+			
 			}
-			System.out.println("");
 		}
 	}
-
-	private void imprimirArbolNodoAct(BinaryTree<String> ab,BinaryTree<String> nodo_act) {
-		BinaryTree<String> b = null;
-		Queue<BinaryTree<String>> q = new Queue<BinaryTree<String>>();
-		String aux_a_imprimir=" a ";
-		q.enqueue(ab);//Encolo primer elemento profundidad 0
-		q.enqueue(null);//Separo profundiad 0 con un null
-		while(!q.is_empty()) {
-			b=q.dequeue();
-			if(b!=null) {
-				if(b==nodo_act)aux_a_imprimir=aux_a_imprimir;
-				else aux_a_imprimir=aux_a_imprimir + b.getData();
-				/*Cuando el elemento se encuentra en un mismo nivel de 
-				profundidad lo imprimo*/
-				if(b.hasLeftChild()) {
-					q.enqueue(b.getLeftChild());
-				}
-				if(b.hasRightChild()) {
-					q.enqueue(b.getRightChild());
-				}
+	private void cargarI(BinaryTree<Integer> nodo_act,Scanner in) {
+		System.out.print("Cargar Dato: ");
+		Integer aux_data = in.nextInt();
+		nodo_act.setData(aux_data);
+	}
+	private void cargarIH(BinaryTree<Integer> nodo_act,Scanner in,boolean hi) {
+		BinaryTree<Integer> aux_ab = new BinaryTree<Integer>();
+		cargarI(aux_ab,in);
+		if(hi)nodo_act.addLeftChild(aux_ab);
+		else nodo_act.addRightChild(aux_ab);
+	}	
+	
+	public void cargarArbolCharacter(BinaryTree<Character> ab,Scanner in) {
+		if(ab!=null) {
+			DoubleEndedQueue<BinaryTree<Character>> nodos_ant = new DoubleEndedQueue<BinaryTree<Character>>();
+			DoubleEndedQueue<BinaryTree<Character>> nodos_padre = new DoubleEndedQueue<BinaryTree<Character>>();
+			DoubleEndedQueue<String> ops_ant = new DoubleEndedQueue<String>();
+			String aux_op="";
+			BinaryTree<Character> aux_ab = null;
+			BinaryTree<Character> nodo_act=ab;
+			System.out.print("Operaciones: Cargar, Salir: ");
+			aux_op = in.next();
+			aux_op= aux_op.toLowerCase();
+			if(aux_op.equals("cargar")) {
+				cargarC(nodo_act,in);
 			}
-			else if(!q.is_empty()) {
-				/*Cuando llega a null y no está vacía implica un cambio de
-				nivel de profundidad*/
-				q.enqueue(null);
-				/*Ya estuve acumulando el siguiente nivel de 
-				profundidad, lo separo con un null*/
-				System.out.println();
+			while(!aux_op.equals("salir")) {
+				System.out.print("Operaciones: Cargar, Salir, Volver, Imprimir, Hd, Hi, P: ");
+				aux_op = in.next();
+				aux_op=aux_op.toLowerCase();
+				switch (aux_op){
+				
+				case "cargar":
+					cargarC(nodo_act,in);
+					ops_ant.enqueueFirst(aux_op);
+					break;
+					
+				case "hi":	
+				case "hd":					
+					nodos_padre.enqueueFirst(nodo_act);
+					nodos_ant.enqueueFirst(nodo_act);
+					if(aux_op.equals("hi")) {
+						if(!nodo_act.hasLeftChild()) {
+							cargarCH(nodo_act,in,true);
+							ops_ant.enqueueFirst("hi_cargar");
+						}
+						else ops_ant.enqueueFirst("hi_mover");
+						nodo_act = nodo_act.getLeftChild();
+					}
+					else {
+						if(!nodo_act.hasRightChild()) {
+							cargarCH(nodo_act,in,false);
+							ops_ant.enqueueFirst("hd_cargar");
+						}
+						else ops_ant.enqueueFirst("hd_mover");
+						nodo_act = nodo_act.getRightChild();
+					}
+					break;
+					
+				case "p":
+					if(!nodos_padre.is_empty()) {
+						aux_ab=nodo_act;
+						nodo_act=nodos_padre.dequeue();
+						ops_ant.enqueueFirst("p_mover");
+						nodos_ant.enqueueFirst(aux_ab);
+					}
+					break;
+					
+				case "volver":
+					if(!nodos_ant.is_empty()) {
+						if(nodos_ant.head()==nodo_act.getLeftChild()||nodos_ant.head()==nodo_act.getRightChild())nodos_padre.enqueue(nodo_act);
+						nodo_act=nodos_ant.dequeue();
+						switch(ops_ant.dequeue()) {
+						case "hi_cargar":nodo_act.removeLeftChild();break;
+						case "hd_cargar":nodo_act.removeRightChild();break;
+						}
+					}
+				case "salir":
+					break;
+				case "imprimir":
+					imprimirArbolP(ab,0,nodo_act);
+					break;
+				default:
+					System.out.print("Operación no válida");
+				}
+			
 			}
 		}
 	}
+	private void cargarC(BinaryTree<Character> nodo_act,Scanner in) {
+		System.out.print("Cargar Dato: ");
+		String aux = in.next();
+		Character aux_data = aux.charAt(0);
+		nodo_act.setData(aux_data);
+	}
+	private void cargarCH(BinaryTree<Character> nodo_act,Scanner in,boolean hi) {
+		BinaryTree<Character> aux_ab = new BinaryTree<Character>();
+		cargarC(aux_ab,in);
+		if(hi)nodo_act.addLeftChild(aux_ab);
+		else nodo_act.addRightChild(aux_ab);
+	}
+	
+	private void imprimirArbolP(BinaryTree<?> ab,int i,BinaryTree<?> act) {
+		if(ab!=null) {
+			this.imprimirArbolP(ab.getRightChild(),i+1,act);
+			int a=0;
+			if(ab==act) {
+				System.out.print("-  ");
+				a++;
+			}
+			for(;a<i+1;a++) {
+				System.out.print("   ");
+			}
+			System.out.println(ab.getData());
+			this.imprimirArbolP(ab.getLeftChild(),i+1,act);
+		}
+	}
+	
+	public  void imprimirArbol(BinaryTree<?> ab,int i) {
+		if(ab!=null) {
+			this.imprimirArbol(ab.getRightChild(),i+1);
+			int a=0;
+			for(;a<i+1;a++) {
+				System.out.print("   ");
+			}
+			System.out.println(ab.getData());
+			this.imprimirArbol(ab.getLeftChild(),i+1);
+		}
+	}
+	
 }
 
