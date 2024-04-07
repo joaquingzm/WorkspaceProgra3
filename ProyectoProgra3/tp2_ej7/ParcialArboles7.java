@@ -1,6 +1,6 @@
 package tp2_ej7;
 import tp2_ej1.BinaryTree;
-public class ParcialArboles {
+public class ParcialArboles7 {
 	private BinaryTree<Integer> ab=null;
 	
 	public void setArbol(BinaryTree<Integer> ab) {

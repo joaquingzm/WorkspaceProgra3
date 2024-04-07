@@ -13,6 +13,7 @@ package paquete_funciones_arbol;
 import tp1_ej8.DoubleEndedQueue;
 import java.util.Scanner;
 import tp2_ej1.BinaryTree;
+import tp2_ej9.Valores;
 public class FuncionesArbol{
 	
 	
@@ -350,6 +351,19 @@ public class FuncionesArbol{
 			}
 			System.out.println(ab.getData());
 			this.imprimirArbol(ab.getLeftChild(),i+1);
+		}
+	}
+	
+	//Implementé este método para el ejercicio 9 de la práctica 2
+	public void imprimirArbolV(BinaryTree<Valores> ab,int i) {
+		if(ab!=null&&!ab.isEmpty()) {
+			this.imprimirArbolV(ab.getRightChild(),i+1);
+			int a=0;
+			for(;a<i+1;a++) {
+				System.out.print("   ");
+			}
+			System.out.println(ab.getData().toString());
+			this.imprimirArbolV(ab.getLeftChild(),i+1);
 		}
 	}
 	
