@@ -18,11 +18,18 @@ public class FuncionesArbol{
 	
 	public void cargarArbolString(BinaryTree<String> ab,Scanner in) {
 		if(ab!=null) {
-			DoubleEndedQueue<BinaryTree<String>> nodos_ant = new DoubleEndedQueue<BinaryTree<String>>();
-			DoubleEndedQueue<BinaryTree<String>> nodos_padre = new DoubleEndedQueue<BinaryTree<String>>();
 			DoubleEndedQueue<String> ops_ant = new DoubleEndedQueue<String>();
-			String aux_op="";
+			DoubleEndedQueue<BinaryTree<String>> nodos_ant = new DoubleEndedQueue<BinaryTree<String>>();
+			//Tanto nodos_ant como ops_ant sirven para la operacion volver
+			DoubleEndedQueue<BinaryTree<String>> nodos_padre = new DoubleEndedQueue<BinaryTree<String>>();
 			BinaryTree<String> aux_ab = null;
+			/*Nodos_padre sirve para la operacion p, no es lo mismo mantener una lista de nodos anteriores en los que
+			se estuvo a mantener una lista fija de padres hasta llegar al padre de mi nodo actual
+			  Por otro lado aux_ab sirve para guardar momentaneamente el valor de mi nodo actual cuando utilizo
+			la operacion p, asiganar a nodo_act su padre y aux_ab(nodo actual anterior)encolarlo en nodos_ant*/
+			DoubleEndedQueue<String> cargas_ant = new DoubleEndedQueue<String>();
+			//Cola que el estado anterior de un nodo, sirve para la op volver
+			String aux_op="";
 			BinaryTree<String> nodo_act=ab;
 			System.out.print("Operaciones: Cargar, Salir: ");
 			aux_op = in.next();
@@ -31,35 +38,47 @@ public class FuncionesArbol{
 				cargarS(nodo_act,in);
 			}
 			while(!aux_op.equals("salir")) {
-				System.out.print("Operaciones: Cargar, Salir, Volver, Imprimir, Hd, Hi, P: ");
+				System.out.print("Operaciones(Nodo act:"+nodo_act.getData()+"): Cargar, Salir, Volver, Imprimir, Hd, Hi, P: ");
 				aux_op = in.next();
 				aux_op=aux_op.toLowerCase();
 				switch (aux_op){
 				
 				case "cargar":
+					cargas_ant.enqueueFirst(nodo_act.getData());
+					//Guardo estado anterior del nodo
 					cargarS(nodo_act,in);
 					ops_ant.enqueueFirst(aux_op);
+					//Encolo op
 					break;
 					
 				case "hi":	
 				case "hd":					
 					nodos_padre.enqueueFirst(nodo_act);
 					nodos_ant.enqueueFirst(nodo_act);
+					/*Cuando paso a un hijo, exista ya o se vaya a crear, guardo como padre
+					el nodo en el que estaba y paso a uno de sus hijos, además también lo guardo
+					en nodos_ant en caso de que quiera utilizar la op volver al estado anterior*/
 					if(aux_op.equals("hi")) {
 						if(!nodo_act.hasLeftChild()) {
+							//Si no tiene hijo izq lo creo
 							cargarSH(nodo_act,in,true);
 							ops_ant.enqueueFirst("hi_cargar");
+							//Guardo que se creo un hijo, para que el volver sepa si tiene que borrarlo
 						}
 						else ops_ant.enqueueFirst("hi_mover");
+						//Guardo que solamente elegí moverme al hijo, el volver no borra nada en ese caso
 						nodo_act = nodo_act.getLeftChild();
 					}
 					else {
 						if(!nodo_act.hasRightChild()) {
+							//Ídem hijo izq
 							cargarSH(nodo_act,in,false);
 							ops_ant.enqueueFirst("hd_cargar");
+							//Ídem hijo izq
 						}
 						else ops_ant.enqueueFirst("hd_mover");
 						nodo_act = nodo_act.getRightChild();
+						//Ídem hijo izq
 					}
 					break;
 					
@@ -67,16 +86,27 @@ public class FuncionesArbol{
 					if(!nodos_padre.is_empty()) {
 						aux_ab=nodo_act;
 						nodo_act=nodos_padre.dequeue();
+						//Paso al padre de nodo_act
 						ops_ant.enqueueFirst("p_mover");
+						//Guardo que me moví al padre para la op volver
 						nodos_ant.enqueueFirst(aux_ab);
+						//Guardo mi el nodo en el que estaba antes de subir a su padre
 					}
 					break;
 					
 				case "volver":
 					if(!nodos_ant.is_empty()) {
-						if(nodos_ant.head()==nodo_act.getLeftChild()||nodos_ant.head()==nodo_act.getRightChild())nodos_padre.enqueue(nodo_act);
+						if(nodos_ant.head()==nodo_act.getLeftChild()||nodos_ant.head()==nodo_act.getRightChild())nodos_padre.enqueueFirst(nodo_act);
+						/*Si en la cabeza de la cola de nodos anteriores hay alguno de los hijos de mi nodo actual entonces significa
+						que antes estuve en unos de mis nodos hijo y realicé una operación p en la cual nodo actual pasó a ser el primer
+						elemento de la cola nodos_padre, o sea, subí a mi padre, por lo tanto si lo quiero revertir tengo que reencolar al
+						principio de la cola al que había sido padre(nodo_act) */
 						nodo_act=nodos_ant.dequeue();
+						//Vuelvo a nodo anterior, sea padre o hijo
 						switch(ops_ant.dequeue()) {
+						/*Unicos casos de operaciones que cambian algo más al volver
+						son cuando un hijo fue creado y cargado o un nodo fue reescrito, entonces se borran*/
+						case "cargar":nodo_act.setData(cargas_ant.dequeue());
 						case "hi_cargar":nodo_act.removeLeftChild();break;
 						case "hd_cargar":nodo_act.removeRightChild();break;
 						}
@@ -107,11 +137,12 @@ public class FuncionesArbol{
 	
 	public void cargarArbolInteger(BinaryTree<Integer> ab,Scanner in) {
 		if(ab!=null) {
+			DoubleEndedQueue<String> ops_ant = new DoubleEndedQueue<String>();
 			DoubleEndedQueue<BinaryTree<Integer>> nodos_ant = new DoubleEndedQueue<BinaryTree<Integer>>();
 			DoubleEndedQueue<BinaryTree<Integer>> nodos_padre = new DoubleEndedQueue<BinaryTree<Integer>>();
-			DoubleEndedQueue<String> ops_ant = new DoubleEndedQueue<String>();
-			String aux_op="";
 			BinaryTree<Integer> aux_ab = null;
+			DoubleEndedQueue<Integer> cargas_ant = new DoubleEndedQueue<Integer>();
+			String aux_op="";
 			BinaryTree<Integer> nodo_act=ab;
 			System.out.print("Operaciones: Cargar, Salir: ");
 			aux_op = in.next();
@@ -120,12 +151,13 @@ public class FuncionesArbol{
 				cargarI(nodo_act,in);
 			}
 			while(!aux_op.equals("salir")) {
-				System.out.print("Operaciones: Cargar, Salir, Volver, Imprimir, Hd, Hi, P: ");
+				System.out.print("Operaciones(Nodo act:"+nodo_act.getData()+"): Cargar, Salir, Volver, Imprimir, Hd, Hi, P: ");
 				aux_op = in.next();
 				aux_op=aux_op.toLowerCase();
 				switch (aux_op){
 				
 				case "cargar":
+					cargas_ant.enqueueFirst(nodo_act.getData());
 					cargarI(nodo_act,in);
 					ops_ant.enqueueFirst(aux_op);
 					break;
@@ -163,9 +195,10 @@ public class FuncionesArbol{
 					
 				case "volver":
 					if(!nodos_ant.is_empty()) {
-						if(nodos_ant.head()==nodo_act.getLeftChild()||nodos_ant.head()==nodo_act.getRightChild())nodos_padre.enqueue(nodo_act);
+						if(nodos_ant.head()==nodo_act.getLeftChild()||nodos_ant.head()==nodo_act.getRightChild())nodos_padre.enqueueFirst(nodo_act);
 						nodo_act=nodos_ant.dequeue();
 						switch(ops_ant.dequeue()) {
+						case "cargar":nodo_act.setData(cargas_ant.dequeue());
 						case "hi_cargar":nodo_act.removeLeftChild();break;
 						case "hd_cargar":nodo_act.removeRightChild();break;
 						}
@@ -196,11 +229,12 @@ public class FuncionesArbol{
 	
 	public void cargarArbolCharacter(BinaryTree<Character> ab,Scanner in) {
 		if(ab!=null) {
+			DoubleEndedQueue<String> ops_ant = new DoubleEndedQueue<String>();
 			DoubleEndedQueue<BinaryTree<Character>> nodos_ant = new DoubleEndedQueue<BinaryTree<Character>>();
 			DoubleEndedQueue<BinaryTree<Character>> nodos_padre = new DoubleEndedQueue<BinaryTree<Character>>();
-			DoubleEndedQueue<String> ops_ant = new DoubleEndedQueue<String>();
-			String aux_op="";
 			BinaryTree<Character> aux_ab = null;
+			DoubleEndedQueue<Character> cargas_ant = new DoubleEndedQueue<Character>();
+			String aux_op="";
 			BinaryTree<Character> nodo_act=ab;
 			System.out.print("Operaciones: Cargar, Salir: ");
 			aux_op = in.next();
@@ -209,12 +243,13 @@ public class FuncionesArbol{
 				cargarC(nodo_act,in);
 			}
 			while(!aux_op.equals("salir")) {
-				System.out.print("Operaciones: Cargar, Salir, Volver, Imprimir, Hd, Hi, P: ");
+				System.out.print("Operaciones(Nodo act:"+nodo_act.getData()+"): Cargar, Salir, Volver, Imprimir, Hd, Hi, P: ");
 				aux_op = in.next();
 				aux_op=aux_op.toLowerCase();
 				switch (aux_op){
 				
 				case "cargar":
+					cargas_ant.enqueueFirst(nodo_act.getData());
 					cargarC(nodo_act,in);
 					ops_ant.enqueueFirst(aux_op);
 					break;
@@ -252,9 +287,10 @@ public class FuncionesArbol{
 					
 				case "volver":
 					if(!nodos_ant.is_empty()) {
-						if(nodos_ant.head()==nodo_act.getLeftChild()||nodos_ant.head()==nodo_act.getRightChild())nodos_padre.enqueue(nodo_act);
+						if(nodos_ant.head()==nodo_act.getLeftChild()||nodos_ant.head()==nodo_act.getRightChild())nodos_padre.enqueueFirst(nodo_act);
 						nodo_act=nodos_ant.dequeue();
 						switch(ops_ant.dequeue()) {
+						case "cargar":nodo_act.setData(cargas_ant.dequeue());
 						case "hi_cargar":nodo_act.removeLeftChild();break;
 						case "hd_cargar":nodo_act.removeRightChild();break;
 						}
@@ -285,7 +321,10 @@ public class FuncionesArbol{
 	}
 	
 	private void imprimirArbolP(BinaryTree<?> ab,int i,BinaryTree<?> act) {
-		if(ab!=null) {
+		/*Primero llega al hijo más derecho y lo imprime con una cantidad de espacios que fue aumentando
+		mientrass bajaba en profundiad, así va imprimiendose en manera triangular horizontal el árbol. Además 
+		cuando el nodo es coincidente con el nodo_act agrega un '-' para indicar posición*/
+		if(ab!=null&&!ab.isEmpty()) {
 			this.imprimirArbolP(ab.getRightChild(),i+1,act);
 			int a=0;
 			if(ab==act) {
@@ -301,7 +340,9 @@ public class FuncionesArbol{
 	}
 	
 	public  void imprimirArbol(BinaryTree<?> ab,int i) {
-		if(ab!=null) {
+		/*Primero llega al hijo más derecho y lo imprime con una cantidad de espacios que fue aumentando
+		mientrass bajaba en profundiad, así va imprimiendose en manera triangular horizontal el árbol*/
+		if(ab!=null&&!ab.isEmpty()) {
 			this.imprimirArbol(ab.getRightChild(),i+1);
 			int a=0;
 			for(;a<i+1;a++) {
