@@ -2,10 +2,8 @@ package tp2_ej9;
 import tp2_ej1.BinaryTree;
 public class ParcialArboles9 {
 	public BinaryTree<Valores> sumAndDif(BinaryTree<Integer> arbol){
-		if(arbol!=null) {
+		if(arbol!=null&&!arbol.isEmpty()) {
 			BinaryTree<Valores> nuevo = new BinaryTree<Valores>();
-			Valores aux = new Valores();
-			nuevo.setData(aux);
 			sumAndDifP(nuevo,arbol,0,0);
 			return nuevo;
 		}
