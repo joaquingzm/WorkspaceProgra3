@@ -96,20 +96,26 @@ public class FuncionesArbol{
 					break;
 					
 				case "volver":
-					if(!nodos_ant.is_empty()) {
-						if(nodos_ant.head()==nodo_act.getLeftChild()||nodos_ant.head()==nodo_act.getRightChild())nodos_padre.enqueueFirst(nodo_act);
-						/*Si en la cabeza de la cola de nodos anteriores hay alguno de los hijos de mi nodo actual entonces significa
-						que antes estuve en unos de mis nodos hijo y realicé una operación p en la cual nodo actual pasó a ser el primer
-						elemento de la cola nodos_padre, o sea, subí a mi padre, por lo tanto si lo quiero revertir tengo que reencolar al
-						principio de la cola al que había sido padre(nodo_act) */
-						nodo_act=nodos_ant.dequeue();
-						//Vuelvo a nodo anterior, sea padre o hijo
-						switch(ops_ant.dequeue()) {
+					if(!ops_ant.is_empty()){
+						String op_ant=(ops_ant.dequeue());
+						if(!nodos_ant.is_empty()&&!op_ant.equals("cargar")) {
+							if(nodos_ant.head()==nodo_act.getLeftChild()||nodos_ant.head()==nodo_act.getRightChild())nodos_padre.enqueueFirst(nodo_act);
+							/*Si en la cabeza de la cola de nodos anteriores hay alguno de los hijos de mi nodo actual entonces significa
+							que antes estuve en unos de mis nodos hijo y realicé una operación p en la cual nodo actual pasó a ser el primer
+							elemento de la cola nodos_padre, o sea, subí a mi padre, por lo tanto si lo quiero revertir tengo que reencolar al
+							principio de la cola al que había sido padre(nodo_act) */
+							nodo_act=nodos_ant.dequeue();
+							//Vuelvo a nodo anterior, sea padre o hijo
+							if(op_ant.equals("hd_cargar")||op_ant.equals("hi_cargar")) {
+								
+						        if(op_ant.equals("hi_cargar"))nodo_act.removeLeftChild();
+						        else nodo_act.removeRightChild();
+							}
+						}
 						/*Unicos casos de operaciones que cambian algo más al volver
 						son cuando un hijo fue creado y cargado o un nodo fue reescrito, entonces se borran*/
-						case "cargar":nodo_act.setData(cargas_ant.dequeue());
-						case "hi_cargar":nodo_act.removeLeftChild();break;
-						case "hd_cargar":nodo_act.removeRightChild();break;
+						if(op_ant.equals("cargar")) {
+						nodo_act.setData(cargas_ant.dequeue());
 						}
 					}
 				case "salir":
@@ -195,13 +201,18 @@ public class FuncionesArbol{
 					break;
 					
 				case "volver":
-					if(!nodos_ant.is_empty()) {
-						if(nodos_ant.head()==nodo_act.getLeftChild()||nodos_ant.head()==nodo_act.getRightChild())nodos_padre.enqueueFirst(nodo_act);
-						nodo_act=nodos_ant.dequeue();
-						switch(ops_ant.dequeue()) {
-						case "cargar":nodo_act.setData(cargas_ant.dequeue());
-						case "hi_cargar":nodo_act.removeLeftChild();break;
-						case "hd_cargar":nodo_act.removeRightChild();break;
+					if(!ops_ant.is_empty()){
+						String op_ant=(ops_ant.dequeue());
+						if(!nodos_ant.is_empty()&&!op_ant.equals("cargar")) {
+							if(nodos_ant.head()==nodo_act.getLeftChild()||nodos_ant.head()==nodo_act.getRightChild())nodos_padre.enqueueFirst(nodo_act);
+							nodo_act=nodos_ant.dequeue();
+							if(op_ant.equals("hd_cargar")||op_ant.equals("hi_cargar")) {
+						        if(op_ant.equals("hi_cargar"))nodo_act.removeLeftChild();
+						        else nodo_act.removeRightChild();
+							}
+						}
+						if(op_ant.equals("cargar")) {
+						nodo_act.setData(cargas_ant.dequeue());
 						}
 					}
 				case "salir":
@@ -287,13 +298,18 @@ public class FuncionesArbol{
 					break;
 					
 				case "volver":
-					if(!nodos_ant.is_empty()) {
-						if(nodos_ant.head()==nodo_act.getLeftChild()||nodos_ant.head()==nodo_act.getRightChild())nodos_padre.enqueueFirst(nodo_act);
-						nodo_act=nodos_ant.dequeue();
-						switch(ops_ant.dequeue()) {
-						case "cargar":nodo_act.setData(cargas_ant.dequeue());
-						case "hi_cargar":nodo_act.removeLeftChild();break;
-						case "hd_cargar":nodo_act.removeRightChild();break;
+					if(!ops_ant.is_empty()){
+						String op_ant=(ops_ant.dequeue());
+						if(!nodos_ant.is_empty()&&!op_ant.equals("cargar")) {
+							if(nodos_ant.head()==nodo_act.getLeftChild()||nodos_ant.head()==nodo_act.getRightChild())nodos_padre.enqueueFirst(nodo_act);
+							nodo_act=nodos_ant.dequeue();
+							if(op_ant.equals("hd_cargar")||op_ant.equals("hi_cargar")) {
+						        if(op_ant.equals("hi_cargar"))nodo_act.removeLeftChild();
+						        else nodo_act.removeRightChild();
+							}
+						}
+						if(op_ant.equals("cargar")) {
+						nodo_act.setData(cargas_ant.dequeue());
 						}
 					}
 				case "salir":

@@ -1,5 +1,4 @@
 package paquete_funciones_arbol;
-import paquete_funciones_arbol.FuncionesArbol;
 import tp2_ej1.BinaryTree;
 import java.util.Scanner;
 public class Prueba {
