@@ -4,40 +4,48 @@ package paquete_funciones_arbol;
  * - cargar = se elige el nodo actual para cargar datos
  * - salir = deja el arbol así como está, si no se cargó nada queda en null
  * - volver = vuelve al estado anterior borrando hijos si se fueron hechos (hace tope con la raiz, si se quiere poner el estado
- anterior hay que volver a cargar)
+ anterior de la raiz hay que volver a cargar)
  * - imprimir = imprime estado del arból y marca el nodo con '-'
- * - hd/hi = se mueve al hijo derecho/hijo izquierdo del nodo (si no existe pregunta si se
- quiere crear un nodo para cargar)
+ * - h = se mueve al hijo izq y si no existe lo crea y pide cargarlo
+ * - hsig = se mueve al nodo de la derecha del nodo actual(a lo largo de la lista childre), en caso de que no exista lo crea y pide cargarlo
  * - p = vuelve al padre
  */
 import tp1_ej8.DoubleEndedQueue;
-import tp2_ej1.BinaryTree;
-
 import java.util.Scanner;
 import tp3_ej1.GeneralTree;
-import tp2_ej9.Valores;
 import java.util.LinkedList;
 public class FuncionesArbolG{
 	
 	
-	public void cargarArbolString(GeneralTree<String> ab,Scanner in) {
-		if(ab!=null) {
-			LinkedList<GeneralTree<String>> lista_act=null;
-			int indice_act;
-			//Creo lista actual sobrela que me estoy moviendo y posicion de mi nodo actual
+	public void cargarArbolString(GeneralTree<String> ag,Scanner in) {
+		if(ag!=null) {
+			DoubleEndedQueue<LinkedList<GeneralTree<String>>> lista_de_listas_ant = new DoubleEndedQueue<LinkedList<GeneralTree<String>>>();;
+			
+			LinkedList<GeneralTree<String>> aux_lista=null;
+			//La uso para crear una lista de hijos cuando no existen
+			
+			LinkedList<GeneralTree<String>> lista_act=null; 
+			int indice_act=0;
+			//Uso la lista_act e indice_act para operacion hsig
+			
 			DoubleEndedQueue<String> ops_ant = new DoubleEndedQueue<String>();
 			DoubleEndedQueue<GeneralTree<String>> nodos_ant = new DoubleEndedQueue<GeneralTree<String>>();
-			//Tanto nodos_ant como ops_ant sirven para la operacion volver
-			DoubleEndedQueue<GeneralTree<String>> nodos_padre = new DoubleEndedQueue<GeneralTree<String>>();
-			GeneralTree<String> aux_ag = null;
-			/*Nodos_padre sirve para la operacion p, no es lo mismo mantener una lista de nodos anteriores en los que
-			se estuvo a mantener una lista fija de padres hasta llegar al padre de mi nodo actual
-			  Por otro lado aux_ab sirve para guardar momentaneamente el valor de mi nodo actual cuando utilizo
-			la operacion p, asiganar a nodo_act su padre y aux_ab(nodo actual anterior)encolarlo en nodos_ant*/
 			DoubleEndedQueue<String> cargas_ant = new DoubleEndedQueue<String>();
-			//Cola que el estado anterior de un nodo, sirve para la op volver
+			//Ops_ant, nodos_ant y cargas_ant sirven para la operacion volver
+			
+			LinkedList<GeneralTree<String>> nodos_padre = new LinkedList<GeneralTree<String>>();
+			/*Nodos_padre sirve para la operacion p, no es lo mismo mantener una lista de nodos anteriores en los que
+			se estuvo a mantener una lista fija de padres hasta llegar al padre de mi nodo actual*/
+			
+			GeneralTree<String> aux_ag = null;
+			//Lo uso para operaciones h,p y volver
+			
 			String aux_op="";
-			GeneralTree<String> nodo_act=ab;
+			//Guarda la ultima operacion ingresada
+			
+			GeneralTree<String> nodo_act=ag;
+			//Guarda el nodo actual
+			
 			System.out.print("Operaciones: Cargar, Salir: ");
 			aux_op = in.next();
 			aux_op= aux_op.toLowerCase();
@@ -58,42 +66,65 @@ public class FuncionesArbolG{
 					//Encolo op
 					break;
 						
-				case "h":					
-					nodos_padre.enqueueFirst(nodo_act);
+				case "h":
+					if(nodo_act!=ag) {
+						lista_de_listas_ant.enqueueFirst(lista_act);
+					}
+					nodos_padre.addFirst(nodo_act);
+					//Como me movi a mis hijos, guardo mi nodo actual como padre
 					nodos_ant.enqueueFirst(nodo_act);
-					/*Cuando paso a un hijo, exista ya o se vaya a crear, guardo como padre
-					el nodo en el que estaba y paso a uno de su hijo izq, además también lo guardo
-					en nodos_ant en caso de que quiera utilizar la op volver al estado anterior*/
+					//Como me desplace guardo mi nodo actual como futuro nodo anterior en el que estuve
 					
 					if(!nodo_act.hasChildren()) {
-						//Si no tiene hijo izq
+						//Si no tiene lista de hijos
+						aux_lista = new LinkedList<GeneralTree<String>>();
+						nodo_act.setChildren(aux_lista);
 						cargarSH(nodo_act,in);
 						ops_ant.enqueueFirst("h_cargar");
 						//Guardo que se creo un hijo, para que el volver sepa si tiene que borrarlo
 					}
-					else ops_ant.enqueueFirst("h_sig");
+					else ops_ant.enqueueFirst("h_mover");
 					//Guardo que solamente elegí moverme al hijo, el volver no borra nada en ese caso
+					aux_ag=nodo_act;
+					//Me guardo el nodo en el que estaba para mas tarde acceder a la nueva lista de hijos
 					nodo_act = nodo_act.getChildren().get(0);
+					//Mi nodo actual pasa a ser el hijo 0 de la lista
+					lista_act = aux_ag.getChildren();
 					//Guardo lista sobre la que me voy a mover
-					lista_act = nodo_act.getChildren();
 					indice_act=0;
+					/*Cuando creo una nueva lista de hijos o me muevo a una ya existente
+					el primer hijo al que me muevo siempre va estar en el indice 0 de la lista*/
 					break;
 				
 				case "hsig":
-					ops_ant.enqueueFirst("h_sig");
-					//Guardo que solamente elegí moverme al hijo, el volver no borra nada en ese caso
-					nodos_ant.enqueueFirst(nodo_act);
-					//Guardo nodo anterior en el que estaba
-					indice_act++;
-					//Incremento mi posicion en la lista de hijos
-					nodo_act = lista_act.get(indice_act);
-					//Cambio mi nodo actual al siguiente
+					if(lista_act!=null) {
+						//Si no existe lista actual significa que soy raiz por lo tanto ignoro operacion
+						nodos_ant.enqueueFirst(nodo_act);
+						if(lista_act.size()==indice_act+1) {
+							cargarSH(nodos_padre.getFirst(),in);
+							ops_ant.enqueueFirst("hsig_cargar");
+						}
+						else ops_ant.enqueueFirst("hsig_mover");
+						//Guardo que solamente elegí moverme al hijo, el volver no borra nada en ese caso
+						indice_act++;
+						//Incremento mi posicion en la lista de hijos
+						nodo_act = lista_act.get(indice_act);
+						//Cambio mi nodo actual al siguiente
+					}
 					break;
 				case "p":
-					if(!nodos_padre.is_empty()) {
+					if(nodos_padre.size()!=0) {
+						/*Si la lista de nodos padre es de tamaño 0 significa
+						que soy raiz y por lo tanto ignoro operacion*/
 						aux_ag=nodo_act;
-						nodo_act=nodos_padre.dequeue();
-						//Paso al padre de nodo_act
+						//Guardo nodo actual antes de subir al padre para encolarlo en nodos_ant
+						nodo_act=nodos_padre.remove(0);
+						lista_de_listas_ant.enqueueFirst(lista_act);
+						if(nodos_padre.size()!=0)lista_act=nodos_padre.getFirst().getChildren();
+						/*Si la lista de nodos padre aun no está vacía signfica que no soy raiz 
+						y que la lista actual de hijos del mismo nivel sobre la que me muevo existe*/
+						else lista_act=null;
+						//Sino, seteo lista actual en nulo
 						ops_ant.enqueueFirst("p_mover");
 						//Guardo que me moví al padre para la op volver
 						nodos_ant.enqueueFirst(aux_ag);
@@ -103,31 +134,48 @@ public class FuncionesArbolG{
 					
 				case "volver":
 					if(!ops_ant.is_empty()){
-						String op_ant=(ops_ant.dequeue());
-						if(!nodos_ant.is_empty()&&!op_ant.equals("cargar")) {
-							if(nodo_act.getChildren().contains(nodos_ant.head()))nodos_padre.enqueueFirst(nodo_act);
-							/*Si en la cabeza de la cola de nodos anteriores hay alguno de los hijos de mi nodo actual entonces significa
-							que antes estuve en unos de mis nodos hijo y realicé una operación p en la cual nodo actual pasó a ser el primer
-							elemento de la cola nodos_padre, o sea, subí a mi padre, por lo tanto si lo quiero revertir tengo que reencolar al
-							principio de la cola al que había sido padre(nodo_act) */
-							//Guardo nodo anterior para borrar en caso de que fuera un nodo recien cargado
+						/*Si operaciones anteriores está vacía entonces significa que llegué
+						al momento antes de cargar la raiz e ignoro la operacion*/
+						switch(ops_ant.dequeue()) {
+						case "cargar":
+							nodo_act.setData(cargas_ant.dequeue());
+							break;
+						case "h_cargar":
+							nodo_act=nodos_ant.dequeue();
+							nodos_padre.removeFirst();
+							//Vuelvo a nodo anterior(padre), por lo tanto lo borro de la lista de padres
+							if(!lista_de_listas_ant.is_empty())lista_act=lista_de_listas_ant.dequeue();
+							//Recupero lista anterior (de mi nodo padre)
+							nodo_act.setChildren(null);
+							//Deshago lista creada y dejo seteada la lista children en null
+							break;
+						case "h_mover":
+							lista_act=lista_de_listas_ant.dequeue();
+							nodo_act=nodos_ant.dequeue();
+							break;
+						case "hsig_cargar":
+							nodo_act=nodos_ant.dequeue();
+							//Vuelvo a nodo anterior en la lista
+							indice_act--;
+							//Decremento indice actual
+							lista_act.removeLast();
+							//Deshago la creacion de la lista de hijos
+							break;
+						case "hsig_mover":
+							nodo_act=nodos_ant.dequeue();
+							break;
+						case "p_mover":
 							aux_ag=nodo_act;
 							nodo_act=nodos_ant.dequeue();
-							//Vuelvo a nodo anterior, sea padre o hijo
-							if(op_ant.equals("h_cargar")) {
-								nodo_act.removeChild(aux_ag);
-							}
-						}
-						/*Unicos casos de operaciones que cambian algo más al volver
-						son cuando un hijo fue creado y cargado o un nodo fue reescrito, entonces se borran*/
-						if(op_ant.equals("cargar")) {
-						nodo_act.setData(cargas_ant.dequeue());
-						}
+							nodos_padre.addFirst(aux_ag);
+							lista_act=lista_de_listas_ant.dequeue();
+							break;
+						}	
 					}
 				case "salir":
 					break;
 				case "imprimir":
-					imprimirArbolP(ab,0,nodo_act);
+					imprimirArbolP(ag,0,nodo_act);
 					break;
 				default:
 					System.out.print("Operación no válida");
@@ -146,42 +194,199 @@ public class FuncionesArbolG{
 		cargarS(aux_ab,in);
 		nodo_act.addChild(aux_ab);
 	}
+	
+	public void cargarArbolInteger(GeneralTree<Integer> ag,Scanner in) {
+		if(ag!=null) {
+			DoubleEndedQueue<LinkedList<GeneralTree<Integer>>> lista_de_listas_ant = new DoubleEndedQueue<LinkedList<GeneralTree<Integer>>>();;
+			LinkedList<GeneralTree<Integer>> aux_lista=null;
+			LinkedList<GeneralTree<Integer>> lista_act=null; 
+			int indice_act=0;
+			DoubleEndedQueue<String> ops_ant = new DoubleEndedQueue<String>();
+			DoubleEndedQueue<GeneralTree<Integer>> nodos_ant = new DoubleEndedQueue<GeneralTree<Integer>>();
+			DoubleEndedQueue<Integer> cargas_ant = new DoubleEndedQueue<Integer>();
+			LinkedList<GeneralTree<Integer>> nodos_padre = new LinkedList<GeneralTree<Integer>>();
+			GeneralTree<Integer> aux_ag = null;
+			String aux_op="";
+			GeneralTree<Integer> nodo_act=ag;
+			System.out.print("Operaciones: Cargar, Salir: ");
+			aux_op = in.next();
+			aux_op= aux_op.toLowerCase();
+			if(aux_op.equals("cargar")) {
+				cargarI(nodo_act,in);
+			}
+			while(!aux_op.equals("salir")) {
+				System.out.print("Operaciones(Nodo act:"+nodo_act.getData()+"): Cargar, Salir, Volver, Imprimir, H, Hsig, P: ");
+				aux_op = in.next();
+				aux_op=aux_op.toLowerCase();
+				switch (aux_op){
+				case "cargar":
+					cargas_ant.enqueueFirst(nodo_act.getData());
+					cargarI(nodo_act,in);
+					ops_ant.enqueueFirst(aux_op);
+					break;		
+				case "h":
+					if(nodo_act!=ag) {
+						lista_de_listas_ant.enqueueFirst(lista_act);
+					}
+					nodos_padre.addFirst(nodo_act);
+					nodos_ant.enqueueFirst(nodo_act);
+					if(!nodo_act.hasChildren()) {
+						aux_lista = new LinkedList<GeneralTree<Integer>>();
+						nodo_act.setChildren(aux_lista);
+						cargarIH(nodo_act,in);
+						ops_ant.enqueueFirst("h_cargar");
+					}
+					else ops_ant.enqueueFirst("h_mover");
+					aux_ag=nodo_act;
+					nodo_act = nodo_act.getChildren().get(0);
+					lista_act = aux_ag.getChildren();
+					indice_act=0;
+					break;
+				case "hsig":
+					if(lista_act!=null) {
+						nodos_ant.enqueueFirst(nodo_act);
+						if(lista_act.size()==indice_act+1) {
+							cargarIH(nodos_padre.getFirst(),in);
+							ops_ant.enqueueFirst("hsig_cargar");
+						}
+						else ops_ant.enqueueFirst("hsig_mover");
+						indice_act++;
+						nodo_act = lista_act.get(indice_act);
+					}
+					break;
+				case "p":
+					if(nodos_padre.size()!=0) {
+						aux_ag=nodo_act;
+						nodo_act=nodos_padre.remove(0);
+						lista_de_listas_ant.enqueueFirst(lista_act);
+						if(nodos_padre.size()!=0)lista_act=nodos_padre.getFirst().getChildren();
+						else lista_act=null;
+						ops_ant.enqueueFirst("p_mover");
+						nodos_ant.enqueueFirst(aux_ag);
+					}
+					break;
+					
+				case "volver":
+					if(!ops_ant.is_empty()){
+						switch(ops_ant.dequeue()) {
+						case "cargar":
+							nodo_act.setData(cargas_ant.dequeue());
+							break;
+						case "h_cargar":
+							nodo_act=nodos_ant.dequeue();
+							nodos_padre.removeFirst();
+							if(!lista_de_listas_ant.is_empty())lista_act=lista_de_listas_ant.dequeue();
+							nodo_act.setChildren(null);
+							break;
+						case "h_mover":
+							lista_act=lista_de_listas_ant.dequeue();
+							nodo_act=nodos_ant.dequeue();
+							break;
+						case "hsig_cargar":
+							nodo_act=nodos_ant.dequeue();
+							indice_act--;
+							lista_act.removeLast();
+							break;
+						case "hsig_mover":
+							nodo_act=nodos_ant.dequeue();
+							break;
+						case "p_mover":
+							aux_ag=nodo_act;
+							nodo_act=nodos_ant.dequeue();
+							nodos_padre.addFirst(aux_ag);
+							lista_act=lista_de_listas_ant.dequeue();
+							break;
+						}	
+					}
+				case "salir":
+					break;
+				case "imprimir":
+					imprimirArbolP(ag,0,nodo_act);
+					break;
+				default:
+					System.out.print("Operación no válida");
+				}
+			
+			}
+		}
+	}
+	private void cargarI(GeneralTree<Integer> nodo_act,Scanner in) {
+		System.out.print("Cargar Dato: ");
+		int aux_data = in.nextInt();
+		nodo_act.setData(aux_data);
+	}
+	private void cargarIH(GeneralTree<Integer> nodo_act,Scanner in) {
+		GeneralTree<Integer> aux_ab = new GeneralTree<Integer>();
+		cargarI(aux_ab,in);
+		nodo_act.addChild(aux_ab);
+	}
+	
 	private void imprimirArbolP(GeneralTree<?> ag,int i,GeneralTree<?> act) {
 		/*Primero llega al hijo más derecho y lo imprime con una cantidad de espacios que fue aumentando
 		mientrass bajaba en profundiad, así va imprimiendose en manera triangular horizontal el árbol. Además 
 		cuando el nodo es coincidente con el nodo_act agrega un '-' para indicar posición*/
 		
-		//Terminar 
-		if(ag!=null&&!ag.isEmpty()&&ag.getChildren()!=null) {
-			int j=1,dim=ag.getChildren().size()-1;
-			while(j<dim) {
-				this.imprimirArbolP(ag.getChildren().get(dim-j),i+1,act);
-				j++;
-			}
+		/*Problema con imprimir arbol, la estructura
+		 * paraciera estar bien hecha pero al momento de 
+		 * imprimir se rompe*/
+		if(ag!=null&&!ag.isEmpty()) {
 			int a=0;
-			if(ag==act) {
-				System.out.print("-  ");
-				a++;
+			if(ag.getChildren()!=null) {
+				int j=0,dim=ag.getChildren().size()-1;
+				while(j<=dim) {
+					this.imprimirArbolP(ag.getChildren().get(dim-j),i+1,act);
+					if(j==dim&&dim>0) {
+						System.out.println("");
+					}
+					if(j==dim/2) {
+						if(ag==act) {
+							System.out.print("-  ");
+							a++;
+						}
+						for(;a<i+1;a++) {
+							System.out.print("   ");
+						}
+						System.out.println(ag.getData());
+					}
+					j++;
+				}
 			}
-			for(;a<i+1;a++) {
-				System.out.print("   ");
+			else {
+				if(ag==act) {
+					System.out.print("-  ");
+					a++;
+				}
+				for(;a<i+1;a++) {
+					System.out.print("   ");
+				}
+				System.out.println(ag.getData());
 			}
-			System.out.println(ag.getData());
-			this.imprimirArbolP(ab.getLeftChild(),i+1,act);
 		}
 	}
 	
-	public  void imprimirArbol(BinaryTree<?> ab,int i) {
-		/*Primero llega al hijo más derecho y lo imprime con una cantidad de espacios que fue aumentando
-		mientrass bajaba en profundiad, así va imprimiendose en manera triangular horizontal el árbol*/
-		if(ab!=null&&!ab.isEmpty()) {
-			this.imprimirArbol(ab.getRightChild(),i+1);
+	public  void imprimirArbol(GeneralTree<?> ag,int i) {
+		//Mismo que imprimirArbolP pero no indica nodo actual
+		if(ag!=null&&!ag.isEmpty()) {
 			int a=0;
-			for(;a<i+1;a++) {
-				System.out.print("   ");
+			if(ag.getChildren()!=null) {
+				int j=0,dim=ag.getChildren().size()-1;
+				while(j<=dim) {
+					this.imprimirArbol(ag.getChildren().get(dim-j),i+1);
+					if(j==dim/2) {
+						for(;a<i+1;a++) {
+							System.out.print("   ");
+						}
+						System.out.println(ag.getData());
+					}
+					j++;
+				}
 			}
-			System.out.println(ab.getData());
-			this.imprimirArbol(ab.getLeftChild(),i+1);
+			else {
+				for(;a<i+1;a++) {
+					System.out.print("   ");
+					System.out.println(ag.getData());
+				}
+			}
 		}
 	}
 }

@@ -4,10 +4,9 @@ package paquete_funciones_arbol;
  * - cargar = se elige el nodo actual para cargar datos
  * - salir = deja el arbol así como está, si no se cargó nada queda en null
  * - volver = vuelve al estado anterior borrando hijos si se fueron hechos (hace tope con la raiz, si se quiere poner el estado
- anterior hay que volver a cargar)
+ anterior de la raiz hay que volver a cargar)
  * - imprimir = imprime estado del arból y marca el nodo con '-'
- * - hd/hi = se mueve al hijo derecho/hijo izquierdo del nodo (si no existe pregunta si se
- quiere crear un nodo para cargar)
+ * - hd/hi = se mueve al hijo derecho/hijo izquierdo del nodo y si no existe lo crea y pide cargarlo
  * - p = vuelve al padre
  */
 import tp1_ej8.DoubleEndedQueue;

@@ -76,7 +76,7 @@ public class BinaryTree<T> {
 			if(b.getRightChild()!=null) this.contarHojasRecursivo(b.getRightChild(), i);
 		}
 	}
-	public BinaryTree<T> espejo(){
+	public BinaryTree<T> espejoA(){
 		BinaryTree<T> aux=null;
 		this.espejoRecursivo(this,aux);
 		return aux;
@@ -88,6 +88,13 @@ public class BinaryTree<T> {
 			this.espejoRecursivo(b.getLeftChild(),r.getRightChild());
 			this.espejoRecursivo(b.getRightChild(),r.getLeftChild());
 		}
+	}
+	//Mejor forma, no creo arboles al pedo
+	public BinaryTree<T> espejoB(){
+		BinaryTree<T> aux = new BinaryTree<T>(this.getData());
+		if (this.hasLeftChild()) aux.addRightChild(this.getLeftChild().espejoB());
+		if (this.hasRightChild()) aux.addLeftChild(this.getRightChild().espejoB());
+		return aux;
 	}
 	public void entreProfundidades(int min,int max) {
 		BinaryTree<T> b = null;
