@@ -14,11 +14,13 @@ import tp1_ej8.DoubleEndedQueue;
 import java.util.Scanner;
 import tp3_ej1.GeneralTree;
 import java.util.LinkedList;
+
 public class FuncionesArbolG{
 	
 	
 	public void cargarArbolString(GeneralTree<String> ag,Scanner in) {
 		if(ag!=null) {
+			
 			DoubleEndedQueue<LinkedList<GeneralTree<String>>> lista_de_lista_de_padre = new DoubleEndedQueue<LinkedList<GeneralTree<String>>>();
 			//Es una lista que coincide con los padres, siendo su contenido la lista sobre la que se encuentra el nodo padre
 			DoubleEndedQueue<Integer> lista_de_indices_padre= new DoubleEndedQueue<Integer>();
@@ -35,7 +37,6 @@ public class FuncionesArbolG{
 			LinkedList<GeneralTree<String>> lista_act=null; 
 			int indice_act=0;
 			//Uso la lista_act e indice_act para operacion hsig
-			
 			DoubleEndedQueue<String> ops_ant = new DoubleEndedQueue<String>();
 			DoubleEndedQueue<GeneralTree<String>> nodos_ant = new DoubleEndedQueue<GeneralTree<String>>();
 			DoubleEndedQueue<String> cargas_ant = new DoubleEndedQueue<String>();
@@ -365,10 +366,7 @@ public class FuncionesArbolG{
 		mientrass bajaba en profundiad, así va imprimiendose en manera triangular horizontal el árbol. Además 
 		cuando el nodo es coincidente con el nodo_act agrega un '-' para indicar posición*/
 		
-		/*Problema con imprimir arbol, la estructura
-		 * paraciera estar bien hecha pero al momento de 
-		 * imprimir se rompe*/
-		if(ag!=null&&!ag.isEmpty()) {
+			if(ag!=null&&!ag.isEmpty()) {
 			int a=0;
 			if(ag.getChildren()!=null) {
 				int j=0,dim=ag.getChildren().size()-1;
@@ -411,6 +409,9 @@ public class FuncionesArbolG{
 				int j=0,dim=ag.getChildren().size()-1;
 				while(j<=dim) {
 					this.imprimirArbol(ag.getChildren().get(dim-j),i+1);
+					if(j==dim&&dim>0) {
+						System.out.println("");
+					}
 					if(j==dim/2) {
 						for(;a<i+1;a++) {
 							System.out.print("   ");
@@ -423,8 +424,57 @@ public class FuncionesArbolG{
 			else {
 				for(;a<i+1;a++) {
 					System.out.print("   ");
-					System.out.println(ag.getData());
 				}
+				System.out.println(ag.getData());
+			}
+		}
+	}
+	
+	public void imprimirArbolGPorNiveles(GeneralTree<Integer> ag) {
+		if(ag!=null) {
+			int indice_act=0;
+			//Indice del nodo actual en la lista de hijos
+			int dim_lista;
+			//Dimension de la lista de hijos
+			LinkedList<LinkedList<GeneralTree<Integer>>> lista_de_listas = new LinkedList<LinkedList<GeneralTree<Integer>>>();
+			//Lista donde guardo los hijos del siguiente nivel sobre el que me estoy moviendo
+			LinkedList<GeneralTree<Integer>> lista_actual=null;
+			//Lista de hijos actual sobre la que me muevo
+			GeneralTree<Integer> nodo_act=ag;
+			//Nodo actual
+			System.out.print(nodo_act.getData());
+			System.out.println();
+			//Si cumple condicion, lo encolo
+			lista_actual=nodo_act.getChildren();
+			//Asigno lista actual sobre la que me voy a mover
+			if(nodo_act.hasChildren()) {
+				lista_de_listas.add(nodo_act.getChildren());
+				lista_de_listas.add(null);
+			}
+			while(!lista_de_listas.isEmpty()) {
+					indice_act=0;
+					//Seteo el indice actual en 0 para cada loop
+				    lista_actual=lista_de_listas.remove(0);
+				    //Actualizo lista actual
+				    if(lista_actual!=null) {
+						dim_lista=lista_actual.size();
+						//Dimension de lista actual
+						while(indice_act<dim_lista) {
+							//Condicion de corte de control: llegar al final de la lista
+							nodo_act=lista_actual.get(indice_act);
+							//Nodo actual pasa a ser el primer(cuando recien entro al loop) o siguiente hijo de la lista
+							if(nodo_act.hasChildren())lista_de_listas.add(nodo_act.getChildren());
+							//Si mi nodo actual tiene lista de hijos la añado a la lista de listas de hijos (siguiente nivel)
+							indice_act++;
+							//Aumento indice actual sobre la lista para la siguiente vuelta
+							System.out.print(nodo_act.getData());
+						}
+				    }
+				    else if(!lista_de_listas.isEmpty()) {
+				    	lista_de_listas.add(null);
+				    	System.out.println();
+				    }
+					
 			}
 		}
 	}

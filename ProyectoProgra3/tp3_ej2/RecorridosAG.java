@@ -37,6 +37,9 @@ public class RecorridosAG {
 					i++;
 				}
 			}
+			else {
+				
+			}
 			if(ag.getData()%2!=0&&ag.getData()>n)aux_list.add(ag.getData());
 		}
 	}
@@ -67,7 +70,6 @@ public class RecorridosAG {
 		while(!lista_de_listas.isEmpty()) {
 				indice_act=0;
 				//Seteo el indice actual en 0 para cada loop
-				
 			    lista_actual=lista_de_listas.remove(0);
 			    //Actualizo lista actual
 				dim_lista=lista_actual.size();

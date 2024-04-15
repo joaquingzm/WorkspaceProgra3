@@ -4,11 +4,11 @@ import java.util.Scanner;;
 public class PruebaAG {
 
 	public static void main(String[] args) {
-		GeneralTree<String> agS = new GeneralTree<String>();
+		GeneralTree<Integer> agS = new GeneralTree<Integer>();
 		FuncionesArbolG func = new FuncionesArbolG();
 		Scanner in = new Scanner(System.in);
-		func.cargarArbolString(agS, in);
-		func.imprimirArbol(agS, 0);
+		func.cargarArbolInteger(agS, in);
+		func.imprimirArbolGPorNiveles(agS);
 	}
 
 }

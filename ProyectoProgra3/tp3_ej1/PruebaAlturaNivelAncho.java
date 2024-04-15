@@ -9,6 +9,7 @@ public class PruebaAlturaNivelAncho {
 		GeneralTree<Integer> ag = new GeneralTree<Integer>();
 		func.cargarArbolInteger(ag, in);
 		System.out.println(ag.altura());
+		System.out.println(ag.nivel(2));
 	}
 
 }

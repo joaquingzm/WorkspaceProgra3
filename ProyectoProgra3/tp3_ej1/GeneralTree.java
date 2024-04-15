@@ -60,21 +60,11 @@ public class GeneralTree<T> {
 	}
 	//Terminar
 	public int nivel(T dato) {
-		if(this!=null&&!this.isEmpty()) {
-			if(this.getData()==dato) {
-				return 0;
-			}
-			if(this.hasChildren()) {
-				int aux=0;
-				for(GeneralTree<T> nodo : this.getChildren()) {
-					aux=nodo.nivel(dato);
-					if(aux!=-1) {
-						return aux+1;
-					}
-				}
+		if(this!=null) {
+			for(GeneralTree<T> nodo : this.getChildren()) {
+				
 			}
 		}
-		return 0;
 	}
 	
 	
