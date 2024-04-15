@@ -46,5 +46,45 @@ public class GeneralTree<T> {
 	public boolean isLeaf() {
 		return this.getChildren()==null;
 	}
+	public int altura() {
+		if(!this.isLeaf()) {
+			int max=0;
+			int alt;
+			for(GeneralTree<T> h : this.getChildren()) {
+				alt = h.altura();
+				if(alt>max)max=alt;
+			}
+			return max+1;
+		}
+		else return 0;
+	}
+	//Terminar
+	public int nivel(T dato) {
+		if(this!=null&&!this.isEmpty()) {
+			if(this.getData()==dato) {
+				return 0;
+			}
+			if(this.hasChildren()) {
+				int aux=0;
+				for(GeneralTree<T> nodo : this.getChildren()) {
+					aux=nodo.nivel(dato);
+					if(aux!=-1) {
+						return aux+1;
+					}
+				}
+			}
+		}
+		return 0;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }
