@@ -19,7 +19,15 @@ public class FuncionesArbolG{
 	
 	public void cargarArbolString(GeneralTree<String> ag,Scanner in) {
 		if(ag!=null) {
-			DoubleEndedQueue<LinkedList<GeneralTree<String>>> lista_de_listas_ant = new DoubleEndedQueue<LinkedList<GeneralTree<String>>>();;
+			DoubleEndedQueue<LinkedList<GeneralTree<String>>> lista_de_lista_de_padre = new DoubleEndedQueue<LinkedList<GeneralTree<String>>>();
+			//Es una lista que coincide con los padres, siendo su contenido la lista sobre la que se encuentra el nodo padre
+			DoubleEndedQueue<Integer> lista_de_indices_padre= new DoubleEndedQueue<Integer>();
+			//Funciona junto con lista de listas de los nodos padre
+			
+			DoubleEndedQueue<LinkedList<GeneralTree<String>>> lista_de_listas_ant = new DoubleEndedQueue<LinkedList<GeneralTree<String>>>();
+			//La uso para conocer la lista de hijos sobre la que me estaba moviendo anteriormente, sirve para la operación volver
+			DoubleEndedQueue<Integer> lista_de_indices_ant= new DoubleEndedQueue<Integer>();
+			//Funciona junto con lista de listas anteriores
 			
 			LinkedList<GeneralTree<String>> aux_lista=null;
 			//La uso para crear una lista de hijos cuando no existen
@@ -69,6 +77,9 @@ public class FuncionesArbolG{
 				case "h":
 					if(nodo_act!=ag) {
 						lista_de_listas_ant.enqueueFirst(lista_act);
+						lista_de_lista_de_padre.enqueueFirst(lista_act);
+						lista_de_indices_padre.enqueueFirst(indice_act);
+						lista_de_indices_ant.enqueueFirst(indice_act);
 					}
 					nodos_padre.addFirst(nodo_act);
 					//Como me movi a mis hijos, guardo mi nodo actual como padre
@@ -120,7 +131,11 @@ public class FuncionesArbolG{
 						//Guardo nodo actual antes de subir al padre para encolarlo en nodos_ant
 						nodo_act=nodos_padre.remove(0);
 						lista_de_listas_ant.enqueueFirst(lista_act);
-						if(nodos_padre.size()!=0)lista_act=nodos_padre.getFirst().getChildren();
+						lista_de_indices_ant.enqueueFirst(indice_act);
+						if(!lista_de_lista_de_padre.is_empty()) {
+							lista_act=lista_de_lista_de_padre.dequeue();
+							indice_act=lista_de_indices_padre.dequeue();
+						}
 						/*Si la lista de nodos padre aun no está vacía signfica que no soy raiz 
 						y que la lista actual de hijos del mismo nivel sobre la que me muevo existe*/
 						else lista_act=null;
@@ -144,13 +159,17 @@ public class FuncionesArbolG{
 							nodo_act=nodos_ant.dequeue();
 							nodos_padre.removeFirst();
 							//Vuelvo a nodo anterior(padre), por lo tanto lo borro de la lista de padres
-							if(!lista_de_listas_ant.is_empty())lista_act=lista_de_listas_ant.dequeue();
+							if(!lista_de_listas_ant.is_empty()) {
+								lista_act=lista_de_listas_ant.dequeue();
+								indice_act=lista_de_indices_ant.dequeue();
+							}
 							//Recupero lista anterior (de mi nodo padre)
 							nodo_act.setChildren(null);
 							//Deshago lista creada y dejo seteada la lista children en null
 							break;
 						case "h_mover":
 							lista_act=lista_de_listas_ant.dequeue();
+							indice_act=lista_de_indices_ant.dequeue();
 							nodo_act=nodos_ant.dequeue();
 							break;
 						case "hsig_cargar":
@@ -169,6 +188,7 @@ public class FuncionesArbolG{
 							nodo_act=nodos_ant.dequeue();
 							nodos_padre.addFirst(aux_ag);
 							lista_act=lista_de_listas_ant.dequeue();
+							indice_act=lista_de_indices_ant.dequeue();
 							break;
 						}	
 					}
@@ -197,7 +217,10 @@ public class FuncionesArbolG{
 	
 	public void cargarArbolInteger(GeneralTree<Integer> ag,Scanner in) {
 		if(ag!=null) {
-			DoubleEndedQueue<LinkedList<GeneralTree<Integer>>> lista_de_listas_ant = new DoubleEndedQueue<LinkedList<GeneralTree<Integer>>>();;
+			DoubleEndedQueue<LinkedList<GeneralTree<Integer>>> lista_de_lista_de_padre = new DoubleEndedQueue<LinkedList<GeneralTree<Integer>>>();
+			DoubleEndedQueue<Integer> lista_de_indices_padre= new DoubleEndedQueue<Integer>();
+			DoubleEndedQueue<LinkedList<GeneralTree<Integer>>> lista_de_listas_ant = new DoubleEndedQueue<LinkedList<GeneralTree<Integer>>>();
+			DoubleEndedQueue<Integer> lista_de_indices_ant= new DoubleEndedQueue<Integer>();
 			LinkedList<GeneralTree<Integer>> aux_lista=null;
 			LinkedList<GeneralTree<Integer>> lista_act=null; 
 			int indice_act=0;
@@ -227,6 +250,9 @@ public class FuncionesArbolG{
 				case "h":
 					if(nodo_act!=ag) {
 						lista_de_listas_ant.enqueueFirst(lista_act);
+						lista_de_lista_de_padre.enqueueFirst(lista_act);
+						lista_de_indices_padre.enqueueFirst(indice_act);
+						lista_de_indices_ant.enqueueFirst(indice_act);
 					}
 					nodos_padre.addFirst(nodo_act);
 					nodos_ant.enqueueFirst(nodo_act);
@@ -259,8 +285,16 @@ public class FuncionesArbolG{
 						aux_ag=nodo_act;
 						nodo_act=nodos_padre.remove(0);
 						lista_de_listas_ant.enqueueFirst(lista_act);
-						if(nodos_padre.size()!=0)lista_act=nodos_padre.getFirst().getChildren();
-						else lista_act=null;
+						lista_de_indices_ant.enqueueFirst(indice_act);
+						if(!lista_de_lista_de_padre.is_empty()) {
+							lista_act=lista_de_lista_de_padre.dequeue();
+							indice_act=lista_de_indices_padre.dequeue();
+						}
+						else {
+							lista_act=null;
+							indice_act=0;
+						}
+						
 						ops_ant.enqueueFirst("p_mover");
 						nodos_ant.enqueueFirst(aux_ag);
 					}
@@ -275,11 +309,15 @@ public class FuncionesArbolG{
 						case "h_cargar":
 							nodo_act=nodos_ant.dequeue();
 							nodos_padre.removeFirst();
-							if(!lista_de_listas_ant.is_empty())lista_act=lista_de_listas_ant.dequeue();
+							if(!lista_de_listas_ant.is_empty()) {
+								lista_act=lista_de_listas_ant.dequeue();
+								indice_act=lista_de_indices_ant.dequeue();
+							}
 							nodo_act.setChildren(null);
 							break;
 						case "h_mover":
 							lista_act=lista_de_listas_ant.dequeue();
+							indice_act=lista_de_indices_ant.dequeue();
 							nodo_act=nodos_ant.dequeue();
 							break;
 						case "hsig_cargar":
@@ -295,6 +333,7 @@ public class FuncionesArbolG{
 							nodo_act=nodos_ant.dequeue();
 							nodos_padre.addFirst(aux_ag);
 							lista_act=lista_de_listas_ant.dequeue();
+							indice_act=lista_de_indices_ant.dequeue();
 							break;
 						}	
 					}
