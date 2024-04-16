@@ -10,7 +10,7 @@ package paquete_funciones_arbol;
  * - hsig = se mueve al nodo de la derecha del nodo actual(a lo largo de la lista childre), en caso de que no exista lo crea y pide cargarlo
  * - p = vuelve al padre
  */
-import tp1_ej8.DoubleEndedQueue;
+
 import java.util.Scanner;
 import tp3_ej1.GeneralTree;
 import java.util.LinkedList;

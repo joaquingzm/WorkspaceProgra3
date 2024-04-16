@@ -9,7 +9,7 @@ package paquete_funciones_arbol;
  * - hd/hi = se mueve al hijo derecho/hijo izquierdo del nodo y si no existe lo crea y pide cargarlo
  * - p = vuelve al padre
  */
-import tp1_ej8.DoubleEndedQueue;
+
 import java.util.Scanner;
 import tp2_ej1.BinaryTree;
 import tp2_ej9.Valores;
