@@ -12,7 +12,7 @@ package paquete_funciones_arbol;
 
 import java.util.Scanner;
 import tp2_ej1.BinaryTree;
-import tp2_ej9.Valores;
+//import tp2_ej9.Valores;
 public class FuncionesArbol{
 	
 	
@@ -369,7 +369,7 @@ public class FuncionesArbol{
 		}
 	}
 	
-	//Implementé este método para el ejercicio 9 de la práctica 2
+	/*Implementé este método para el ejercicio 9 de la práctica 2
 	public void imprimirArbolV(BinaryTree<Valores> ab,int i) {
 		if(ab!=null&&!ab.isEmpty()) {
 			this.imprimirArbolV(ab.getRightChild(),i+1);
@@ -381,6 +381,6 @@ public class FuncionesArbol{
 			this.imprimirArbolV(ab.getLeftChild(),i+1);
 		}
 	}
-	
+	*/
 }
 
