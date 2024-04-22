@@ -22,7 +22,6 @@ public class RecorridosAG {
 	}
 	
 	
-	//CONSULTAR: Terminar In Orden y Post Orden(issue en git)
 	public List<Integer> numerosImparesMayoresQueInOrden (GeneralTree <Integer> ag,Integer n){
 		List<Integer> aux_list = new LinkedList<Integer>();
 		this.numerosImparesMayoresQueInOrdenP(ag, n, aux_list);
@@ -31,22 +30,38 @@ public class RecorridosAG {
 	private void numerosImparesMayoresQueInOrdenP(GeneralTree<Integer> ag,Integer n,List<Integer> aux_list){
 		if(ag!=null) {
 			if(ag.hasChildren()) {
-				int i=0,dimf=ag.getChildren().size();
+				if(ag.getData()%2!=0&&ag.getChildren().get(0).getData()>n)aux_list.add(ag.getChildren().get(0).getData());
+			}
+			if(ag.getData()%2!=0&&ag.getData()>n)aux_list.add(ag.getData());
+			if(ag.hasChildren()) {
+				int i=1,dimf=ag.getChildren().size();
 				while(i<dimf) {
 					numerosImparesMayoresQuePreOrdenP(ag.getChildren().get(i),n,aux_list);
 					i++;
 				}
 			}
-			else {
-				
+		}
+	}
+	
+	public List<Integer> numerosImparesMayoresQuePostOrden (GeneralTree <Integer> ag,Integer n){
+		List<Integer> aux_list = new LinkedList<Integer>();
+		this.numerosImparesMayoresQuePostOrdenP(ag, n, aux_list);
+		return aux_list;
+	}
+	private void numerosImparesMayoresQuePostOrdenP(GeneralTree<Integer> ag,Integer n,List<Integer> aux_list) {
+		if(ag!=null) {
+			if(ag.hasChildren()) {
+				int i=0,dimf=ag.getChildren().size();
+				while(i<dimf) {
+					numerosImparesMayoresQuePostOrdenP(ag.getChildren().get(i),n,aux_list);
+					i++;
+				}
 			}
 			if(ag.getData()%2!=0&&ag.getData()>n)aux_list.add(ag.getData());
 		}
 	}
 	
 	
-	
-	//CONSULTAR: si quisiera separar por niveles cómo hago para añadir un null a la lista?
 	public List<Integer> numerosImparesMayoresQuePorNiveles(GeneralTree<Integer> ag,Integer n) {
 		LinkedList<Integer> lista_nums = new LinkedList<Integer>();
 		

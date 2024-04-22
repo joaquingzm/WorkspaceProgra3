@@ -17,6 +17,8 @@ public class PruebaRecorridosAG {
 		System.out.println(l.toString());
 		l = (LinkedList<Integer>) rec_ag.numerosImparesMayoresQuePorNiveles(ag, 4);
 		System.out.println(l.toString());
+		l = (LinkedList<Integer>) rec_ag.numerosImparesMayoresQuePostOrden(ag, 4);
+		System.out.println(l.toString());
 	}
 
 }

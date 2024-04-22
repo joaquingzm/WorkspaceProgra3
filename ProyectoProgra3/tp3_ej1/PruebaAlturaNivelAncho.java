@@ -10,6 +10,7 @@ public class PruebaAlturaNivelAncho {
 		func.cargarArbolInteger(ag, in);
 		System.out.println(ag.altura());
 		System.out.println(ag.nivel(2));
+		System.out.println(ag.ancho());
 	}
 
 }

@@ -3,7 +3,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
-import tp1_3.Estudiante;
+
+import tp1_ej3.Estudiante;
 public class Ej7 {
 	static Scanner in;
 	public static void main(String[] args) {

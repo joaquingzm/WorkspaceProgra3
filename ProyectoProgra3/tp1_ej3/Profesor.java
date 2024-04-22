@@ -1,4 +1,4 @@
-package tp1_3;
+package tp1_ej3;
 
 public class Profesor {
 	
