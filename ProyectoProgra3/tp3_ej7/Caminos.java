@@ -12,25 +12,34 @@ public class Caminos {
 	}
 	
 	public List<Integer> caminoAHojaMasLejana(){
-		LinkedList<Integer> max = new LinkedList<Integer>();
-		LinkedList<Integer> aux = new LinkedList<Integer>();
-		caminoAHojasMasLejanaP(this.ag,max,aux);
-	/*Terminar, en concepto el pasaje de parametros serias asi como lo puse y tengo que crear un metodo clone para cambiarle valores a max cuando llego a leaf*/
-	}
-	public void caminoAHojaMasLejanaP(GeneralTree<Integer> ag,LinkedList<Integer> max,LinkedList<Integer> aux){
-		if(!ag.isLeaf()) {
-			LinkedList<Integer> aux;
+		if(ag!=null) {
 			LinkedList<Integer> max = new LinkedList<Integer>();
 			max.add(ag.getData());
-			int alt;
-			for(GeneralTree<Integer> nodo : ag.getChildren()) {
-				aux = (LinkedList<Integer>) caminoAHojaMasLejanaP(nodo);
-				if(aux.size()>max.size()) {
-					max=aux;
-				}
-			}
-			return max+1;
+			LinkedList<Integer> aux = new LinkedList<Integer>();
+			caminoAHojaMasLejanaP(this.ag,max,aux);
+			return max;
 		}
-		else return 0;
+		return null;
+	}
+	private void caminoAHojaMasLejanaP(GeneralTree<Integer> ag,LinkedList<Integer> max,LinkedList<Integer> aux){
+		aux.add(ag.getData());
+		if(!ag.isLeaf()) {
+			for(GeneralTree<Integer> nodo : ag.getChildren()) {
+				caminoAHojaMasLejanaP(nodo,max,aux);
+			}			
+		}
+		else if(max.size()<aux.size()) {
+			max.clear();
+			clonarLista(max,aux);
+		}
+		aux.removeLast();
+	}
+	
+	private LinkedList<Integer> clonarLista(LinkedList<Integer> l1,LinkedList<Integer> l2){
+		LinkedList<Integer> aux = new LinkedList<Integer>();
+		for(int i=0;i<l2.size();i++) {
+			l1.add(l2.get(i));
+		}
+		return aux;
 	}
 }
