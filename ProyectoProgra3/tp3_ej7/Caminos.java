@@ -3,7 +3,7 @@ import tp3_ej1.GeneralTree;
 import java.util.List;
 import java.util.LinkedList;
 public class Caminos {
-	GeneralTree<Integer> ag=null;
+	private GeneralTree<Integer> ag=null;
 	
 	public Caminos() {
 	}
@@ -12,9 +12,8 @@ public class Caminos {
 	}
 	
 	public List<Integer> caminoAHojaMasLejana(){
-		if(ag!=null) {
+		if(ag!=null&&!ag.isEmpty()) {
 			LinkedList<Integer> max = new LinkedList<Integer>();
-			max.add(ag.getData());
 			LinkedList<Integer> aux = new LinkedList<Integer>();
 			caminoAHojaMasLejanaP(this.ag,max,aux);
 			return max;
@@ -35,11 +34,9 @@ public class Caminos {
 		aux.removeLast();
 	}
 	
-	private LinkedList<Integer> clonarLista(LinkedList<Integer> l1,LinkedList<Integer> l2){
-		LinkedList<Integer> aux = new LinkedList<Integer>();
+	private void clonarLista(LinkedList<Integer> l1,LinkedList<Integer> l2){
 		for(int i=0;i<l2.size();i++) {
 			l1.add(l2.get(i));
 		}
-		return aux;
 	}
 }
