@@ -1,3 +1,4 @@
+package tp3_ej10;
 import tp3_ej1.GeneralTree;
 import paquete_funciones_arbol.FuncionesArbolG;
 import java.util.Scanner;
