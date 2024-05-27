@@ -1,6 +1,6 @@
-package tp4_ej1;
+package tp5_ej1MatAdy;
 import java.util.List;
-public interface GraphInt<T> {
+public interface GraphIntMatAdy<T> {
 	public VertexMatAdy<T> createVertex(T data);
 	public void removeVertex(VertexMatAdy<T> vertex);
 	public VertexMatAdy<T> search(T data);

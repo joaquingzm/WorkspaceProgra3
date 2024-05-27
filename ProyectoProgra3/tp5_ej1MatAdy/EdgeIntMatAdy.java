@@ -1,6 +1,6 @@
-package tp4_ej1;
+package tp5_ej1MatAdy;
 
-public interface EdgeInt<T> {
+public interface EdgeIntMatAdy<T> {
 	public VertexMatAdy<T> getTarget();
 	public int getWeight();
 }
