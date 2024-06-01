@@ -71,6 +71,22 @@ public class AdjListGraph<T> implements Graph<T> {
 			((AdjListVertex<T>) origin).connect(destination, weight);
 		}
 	}
+	
+	
+	public void connectND(Vertex<T> origin, Vertex<T> destination) {
+		if (this.belongs(origin) && this.belongs(destination)) {
+			((AdjListVertex<T>) origin).connect(destination);
+			((AdjListVertex<T>) destination).connect(origin);
+		}
+	}
+
+
+	public void connectND(Vertex<T> origin, Vertex<T> destination, int weight) {
+		if (this.belongs(origin) && this.belongs(destination)) {
+			((AdjListVertex<T>) origin).connect(destination, weight);
+			((AdjListVertex<T>) destination).connect(origin, weight);
+		}
+	}
 
 	@Override
 	public void disconnect(Vertex<T> origin, Vertex<T> destination) {
