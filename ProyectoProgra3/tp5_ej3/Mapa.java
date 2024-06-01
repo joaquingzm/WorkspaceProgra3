@@ -80,7 +80,7 @@ public class Mapa<T> {
 		else {
 			for(Edge<T> auxE : V.getEdges()) {
 				if(!visitados[auxE.getTarget().getPosition()]&&!ciudades.contains(auxE.getTarget().getData())) {
-					devolverCaminoP((AdjListVertex<T>)auxE.getTarget(),ciudad2,lista,aux,visitados);
+					devolverCaminoExceptuandoP((AdjListVertex<T>)auxE.getTarget(),ciudad2,lista,aux,ciudades,visitados);
 					aux.removeLast();
 				}
 				if(!lista.isEmpty())break;

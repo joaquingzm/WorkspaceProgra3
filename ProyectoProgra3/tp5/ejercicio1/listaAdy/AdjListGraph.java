@@ -71,22 +71,6 @@ public class AdjListGraph<T> implements Graph<T> {
 			((AdjListVertex<T>) origin).connect(destination, weight);
 		}
 	}
-	
-	
-	public void connectND(Vertex<T> origin, Vertex<T> destination) {
-		if (this.belongs(origin) && this.belongs(destination)) {
-			((AdjListVertex<T>) origin).connect(destination);
-			((AdjListVertex<T>) destination).connect(origin);
-		}
-	}
-
-
-	public void connectND(Vertex<T> origin, Vertex<T> destination, int weight) {
-		if (this.belongs(origin) && this.belongs(destination)) {
-			((AdjListVertex<T>) origin).connect(destination, weight);
-			((AdjListVertex<T>) destination).connect(origin, weight);
-		}
-	}
 
 	@Override
 	public void disconnect(Vertex<T> origin, Vertex<T> destination) {
@@ -152,4 +136,34 @@ public class AdjListGraph<T> implements Graph<T> {
 	public int getSize() {
 		return this.vertices.size();
 	}
+	
+	
+	
+	
+	
+	public void connectND(Vertex<T> origin, Vertex<T> destination) {
+		if (this.belongs(origin) && this.belongs(destination)) {
+			((AdjListVertex<T>) origin).connect(destination);
+			((AdjListVertex<T>) destination).connect(origin);
+		}
+	}
+
+	public void connectND(Vertex<T> origin, Vertex<T> destination, int weight) {
+		if (this.belongs(origin) && this.belongs(destination)) {
+			((AdjListVertex<T>) origin).connect(destination, weight);
+			((AdjListVertex<T>) destination).connect(origin, weight);
+		}
+	}
+	
+	public void printGraph() {
+        List<Vertex<T>> vertices = this.getVertices();
+        for (Vertex<T> vertex : vertices) {
+            System.out.print("Vertex " + vertex.getData() + ": ");
+            List<Edge<T>> edges = this.getEdges(vertex);
+            for (Edge<T> edge : edges) {
+                System.out.print(" -> (" + edge.getTarget().getData() + ", weight: " + edge.getWeight() + ")");
+            }
+            System.out.println();
+        }
+    }
 }
