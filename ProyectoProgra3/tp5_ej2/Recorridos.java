@@ -39,34 +39,34 @@ public class Recorridos<T> {
 		}
 	}
 	
-public List<T> Bfs(AdjListGraph<T> grafo){
-	if(grafo!=null&&!grafo.isEmpty()) {
-		DoubleEndedQueue<Vertex<T>> cola = new DoubleEndedQueue<Vertex<T>>();
-		List<Vertex<T>> listaV = grafo.getVertices();
-		List<Edge<T>> listaE;
-		boolean visitados[]= new boolean[grafo.getSize()];
-		List<T> listaR = new LinkedList<T>();
-	
-		Vertex<T> act;
-		for(int j=0;j<listaV.size();j++) {
-			if(!visitados[listaV.get(j).getPosition()]) {
-				cola.enqueue(listaV.get(j));
-				while(!cola.is_empty()) {
-					act = cola.dequeue();
-					listaR.add(act.getData());
-					visitados[act.getPosition()]=true;
-					listaE = grafo.getEdges(act);
-					for(Edge<T> e : listaE) {
-						if(!visitados[e.getTarget().getPosition()]) {
-							cola.enqueue(e.getTarget());
+	public List<T> Bfs(AdjListGraph<T> grafo){
+		if(grafo!=null&&!grafo.isEmpty()) {
+			DoubleEndedQueue<Vertex<T>> cola = new DoubleEndedQueue<Vertex<T>>();
+			List<Vertex<T>> listaV = grafo.getVertices();
+			List<Edge<T>> listaE;
+			boolean visitados[]= new boolean[grafo.getSize()];
+			List<T> listaR = new LinkedList<T>();
+		
+			Vertex<T> act;
+			for(int j=0;j<listaV.size();j++) {
+				if(!visitados[listaV.get(j).getPosition()]) {
+					cola.enqueue(listaV.get(j));
+					while(!cola.is_empty()) {
+						act = cola.dequeue();
+						listaR.add(act.getData());
+						listaE = grafo.getEdges(act);
+						for(Edge<T> e : listaE) {
+							if(!visitados[e.getTarget().getPosition()]) {
+								cola.enqueue(e.getTarget());
+								visitados[e.getTarget().getPosition()]=true;
+							}
 						}
 					}
 				}
 			}
+			return listaR;
 		}
-		return listaR;
+		return null;
 	}
-	return null;
-}
 	
 }

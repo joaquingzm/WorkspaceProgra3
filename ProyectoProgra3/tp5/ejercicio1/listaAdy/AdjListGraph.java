@@ -158,10 +158,10 @@ public class AdjListGraph<T> implements Graph<T> {
 	public void printGraph() {
         List<Vertex<T>> vertices = this.getVertices();
         for (Vertex<T> vertex : vertices) {
-            System.out.print("Vertex " + vertex.getData() + ": ");
+            System.out.print("V " + vertex.getData().toString() + ": ");
             List<Edge<T>> edges = this.getEdges(vertex);
             for (Edge<T> edge : edges) {
-                System.out.print(" -> (" + edge.getTarget().getData() + ", weight: " + edge.getWeight() + ")");
+                System.out.print(" -> (" + edge.getTarget().getData().toString() + ", w: " + edge.getWeight() + ")");
             }
             System.out.println();
         }
