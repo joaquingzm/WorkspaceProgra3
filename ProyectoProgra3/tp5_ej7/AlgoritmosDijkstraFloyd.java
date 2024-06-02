@@ -1,14 +1,32 @@
 package tp5_ej7;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import tp5.ejercicio1.Edge;
+import tp5.ejercicio1.Vertex;
 import tp5.ejercicio1.listaAdy.AdjListGraph;
 import tp5.ejercicio1.listaAdy.AdjListVertex;
 
 public class AlgoritmosDijkstraFloyd<T> {
 	
-	public int[] Dijkstra(AdjListGraph<T> grafo,T origen){
+	public List<T> caminoMasCortoD(AdjListGraph<T> grafo,T origen,T destino){
+		LinkedList<T> listaR = new LinkedList<T>();
+		if(grafo!=null&&!grafo.isEmpty()) {
+			int arr[] = dijkstra(grafo,origen);
+			List<Vertex<T>> listaV = (List<Vertex<T>>) grafo.getVertices();
+			listaR.addFirst(destino);
+			int auxPos = arr[grafo.search(destino).getPosition()];
+			while(listaV.get(auxPos)!=grafo.search(origen)) {
+				listaR.addFirst(listaV.get(auxPos).getData());
+				auxPos = arr[auxPos];
+			}
+			listaR.addFirst(origen);
+		}
+		return listaR;
+	}
+	
+	public int[] dijkstra(AdjListGraph<T> grafo,T origen){
 		if(grafo!=null&&!grafo.isEmpty()) {
 			AdjListVertex<T> origenV = (AdjListVertex<T>) grafo.search(origen);
 			AdjListVertex<T> auxV;
@@ -35,7 +53,7 @@ public class AlgoritmosDijkstraFloyd<T> {
 					}
 				}
 			}
-			return costos;
+			return puntosDePartida;
 		}
 		
 		return null;
@@ -59,4 +77,6 @@ public class AlgoritmosDijkstraFloyd<T> {
 		}
 		return minPos;
 	}
+	
+	
 }

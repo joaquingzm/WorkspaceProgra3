@@ -16,11 +16,13 @@ public class testAlgortimosDijkstraFloyd {
 		AdjListGraph<Integer> grafo = new AdjListGraph<Integer>();
 		crearGrafoDijkstra(grafo);
 		AlgoritmosDijkstraFloyd<Integer> algoritmos = new AlgoritmosDijkstraFloyd<Integer>();
-		int arr[] = algoritmos.Dijkstra(grafo, 1);
+		int arr[] = algoritmos.dijkstra(grafo, 1);
+		System.out.print("Posiciones:\n  ");
 		for(int i=0;i<arr.length;i++) {
 			System.out.print(arr[i]+" , ");
 		}
-		
+		System.out.println("\n\n");
+		System.out.println(algoritmos.caminoMasCortoD(grafo, 1, 3));
 	}
 	
 	public static void crearGrafoDijkstra(AdjListGraph<Integer> grafo) {
