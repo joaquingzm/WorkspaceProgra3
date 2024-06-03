@@ -26,6 +26,7 @@ public class VisitaOslo<T> {
 	private void paseoEnBiciP(AdjListVertex<T> V,T ciudad2,LinkedList<T> lista,LinkedList<T> aux,LinkedList<T> ciudades,boolean visitados[],int tiempoRestante){		
 		visitados[V.getPosition()]=true;
 		aux.add(V.getData());
+		
 		if(V.getData().equals(ciudad2)) {
 			clonarLista(lista,aux);
 		}
@@ -34,6 +35,7 @@ public class VisitaOslo<T> {
 				if(!visitados[auxE.getTarget().getPosition()]&&!estaEnLista(auxE.getTarget().getData(),ciudades)&&(tiempoRestante-auxE.getWeight()>=0)) {
 					paseoEnBiciP((AdjListVertex<T>)auxE.getTarget(),ciudad2,lista,aux,ciudades,visitados,tiempoRestante-auxE.getWeight());
 					aux.removeLast();
+					visitados[auxE.getTarget().getPosition()]=false;
 				}
 				if(!lista.isEmpty())break;
 			}

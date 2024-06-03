@@ -1,7 +1,6 @@
 package tp5_ej3;
 
 import tp5.ejercicio1.listaAdy.AdjListVertex;
-import tp5_ej1ListAdy.GraphListAdy;
 import tp5.ejercicio1.listaAdy.AdjListGraph;
 import tp5.ejercicio1.Edge;
 import tp5.ejercicio1.Vertex;

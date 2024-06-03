@@ -2,11 +2,9 @@ package tp5_ej2;
 import java.util.List;
 
 import tp5.ejercicio1.listaAdy.AdjListVertex;
-import tp5_ej1ListAdy.GraphListAdy;
 import tp5.ejercicio1.listaAdy.AdjListGraph;
 import tp5.ejercicio1.Edge;
 import tp5.ejercicio1.Vertex;
-import tp5.ejercicio1.listaAdy.AdjListEdge;
 import tp1_ej8.DoubleEndedQueue;
 
 
