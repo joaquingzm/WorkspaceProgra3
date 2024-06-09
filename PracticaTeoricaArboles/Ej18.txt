@@ -1,0 +1,14 @@
+Cantidad de nodos para un árbol lleno de grado 4:
+
+[4^(h+1)-1]/(4-1) 
+
+Si sé que la cantidad es 21, despejo altura:
+
+[4^(h+1)-1]/(4-1) = 21
+[4^(h+1)-1] = 21 * 3
+4^(h+1)-1 = 63
+4^(h)*4 = 64
+4^(h) = 16
+log(b=4,4^h) = log(b=4,16)
+
+--- h = 2 ---

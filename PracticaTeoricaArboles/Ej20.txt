@@ -1,0 +1,6 @@
+Los nodos internos a un árbol general lleno de grado k y altura h
+son los que no son hojas, por lo tanto para un árbol general lleno
+de altura 3 los nodos internos serían los de un árbol lleno de altura
+2:
+
+5^(3)-1/4 = 124/4 = 31

@@ -1,0 +1,8 @@
+Sumo cantidad de noso de un árbol general lleno de altura 3 y grado
+3 más un único nodo en el nivel 4:
+
+[k^(h+1)-1]/(k-1) + 1 = cantNodos
+[3^(3+1)-1]/(3-1) + 1 = cantNodos
+[3^(4)-1]/2 + 1 = cantNodos
+(81-1)/2 + 1 = cantNodos
+41 = cantNodos

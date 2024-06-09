@@ -1,0 +1,6 @@
+Número máximo de un árbol general completo de grado k y altura h es:
+[k^(h+1)-1]/(k-1)
+Número mínimo:
+Sabiendo que hasta h-1 es lleno, queda:
+
+cantNodos(h-1) + UnNodo = [k^(h)-1]/(k-1) + 1

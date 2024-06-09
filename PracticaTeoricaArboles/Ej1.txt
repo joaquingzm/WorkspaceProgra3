@@ -1,1 +1,10 @@
-asdsad
+	Un árbol binario lleno es aquel cuyos nodos internos son de 
+grado 2, dicho de otra forma, que los nodos que no son hojas ni se 
+encuentran en los bordes del árbol tengan 2 hijos.
+
+	Un árbol binario completo es aquel de profundidad p que es lleno
+ hasta la profundiad p-1 y se completa en la profundidad p de izquierda 
+ a derecha.
+	¿Es verdad que todo árbol binario completo es un árbol lleno?
+No, no es verdad. ¿Y viceversa? Sí, todo árbol lleno es completo, ya
+que es el caso especial donde el árbol completó su último nivel.

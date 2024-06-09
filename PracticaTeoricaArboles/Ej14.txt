@@ -1,0 +1,11 @@
+(a) Complete los blancos de las sentencias con la terminología vista en clase.
+1. ..A.. es la raíz del árbol.
+2. ..A.. es padre de B, C y D.
+3. ..E.. y ..F.. son hermanos, puesto que ambos son hijos de ..B..
+4. ..P.. y ..Q.. son las hojas del árbol.
+5. El camino desde A a J es único, lo conforman los nodos ..A.. ..B.. ..F.. ..J.. y es de largo ..3..
+7. ..G.. es ancestro de P, y por lo tanto ..P.. es descendiente de D.
+8. L no es descendiente de C, puesto que no existe ..un.. ..camino.. desde C a L.
+9. La profundidad/nivel de C es ..1.., de F es ..2.. y de ..P.. es 4.
+10. La altura de C es ..3.., de ..F.. es 1 y de D es ..3..
+11. La altura del árbol es 4 (largo del camino entre la ..raíz.. y ..su hoja más lejana P/Q.. )

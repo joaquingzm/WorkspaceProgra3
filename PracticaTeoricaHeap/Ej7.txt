@@ -1,0 +1,2 @@
+Hice todo en hoja, arreglo ordenado descendentemente queda (como es obvio):
+[500,140,90,40,33,18,15,13,12,11,10,7,2,1]

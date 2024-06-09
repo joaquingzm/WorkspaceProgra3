@@ -1,0 +1,13 @@
+a) Una heap de altura h tiene al menos 1 una hoja en el nivel h, por lo
+tanto tendrá la cantidad de nodos de un árbol lleno hasta nivel h-1, por
+ser la heap un árbol completo que se llena de derecha a izquierda, mas el
+nodo en nivel h. O sea: 2^(h)-1+1=2^(h)
+
+b) El elemento mínimo en una max heap se encuentra ubicado en las hojas
+
+c) ¿El siguiente arreglo es una max-heap? : 
+         1   2   3   4  5   6   7  8  9  10
+	[23, 17, 14, 6, 13, 10, 1, 5, 7, 12] 
+
+No, no es una max-heap ya que el 6 (pos 4) es menor que su hijo derecho 7
+(pos 9).

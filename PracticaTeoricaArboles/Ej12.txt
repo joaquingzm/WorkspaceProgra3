@@ -1,0 +1,4 @@
+a)Tiene preorden ABCD
+b)Tiene inorden BCAD
+c)Tiene preorden ABCD
+d)Tiene inorden BCAD y preorden ABCD

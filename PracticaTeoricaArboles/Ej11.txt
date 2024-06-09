@@ -1,0 +1,4 @@
+Reconstruí el árbol y lo recorrí en preorden, queda la expresión
+prefija: 
+
+*A--*BCD//EFG

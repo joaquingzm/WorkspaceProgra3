@@ -1,0 +1,4 @@
+El primer árbol no representa una heap ya que no es un árbol completo
+que se llene de izquierda a derecha. El segundo tampoco lo es ya que 4 es
+mayor que su hijo izquierdo (2) y menor que su hijo derecho (7), por lo 
+tanto no representa ninguna heap.

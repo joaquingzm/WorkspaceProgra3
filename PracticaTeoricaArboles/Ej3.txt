@@ -1,0 +1,27 @@
+	Suárbol derecho de T es vacío, esto es porque en semicódigo
+los algoritmos se ven de la forma:
+
+InOrden:
+llamarSubRutinaHI
+ProcesoActual
+llamarSubRutinaHD
+
+PostOrden:
+llamarSubRutinaHI
+llamarSubRutinaHD
+procesar 
+
+	Único caso sería que la raíz T no tuviera hijo derecho, en ese
+caso el llamado a hijo derecho no se efectua y en semicódigo solamente
+para la raíz T queda:
+
+InOrden:
+llamarSubRutinaHI
+ProcesoActual
+
+PostOrden:
+llamarSubRutinaHI
+procesar 
+
+	Después de que los llamados recursivos terminen el último en
+procesarse sería la raiz.

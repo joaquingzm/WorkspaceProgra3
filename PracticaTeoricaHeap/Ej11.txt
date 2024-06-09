@@ -1,0 +1,8 @@
+a) Primero aplique el algoritmo Build Heap para crear un max-heap y
+después la ordené de manera creciente utilizando Heap Sort, como era de esperar, la heap resultante es:
+
+[11,21,27,32,34,36,37,42,43,44,51,62]
+
+b) Para formar un arreglo ordenado de formma decreciente no haría falta
+utilizar Build Heap ya que la heap dada es min-heap, por lo tanto 
+solamente haría falta aplicar Heap Sort.

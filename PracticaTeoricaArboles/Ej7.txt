@@ -1,0 +1,5 @@
+Un árbol completo de altura 4 implica que es lleno hasta profundidad 3 y
+que en profundidad 4 tiene un sólo nodo, por lo tanto la cantidad de 
+nodos mínima que puede llegar a tener son:
+
+cantABLleno + nodo = 2^(h-1+1)-1+1 = 2^(h) = 2^(4) = 16 
