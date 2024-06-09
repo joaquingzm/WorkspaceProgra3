@@ -1,0 +1,5 @@
+b)
+No, no se puede decir que sea un heap por que si bien cumple con la 
+propiedad estructural de ser un árbol completo, puede no cumplir con la 
+propiedad de orden.
+
